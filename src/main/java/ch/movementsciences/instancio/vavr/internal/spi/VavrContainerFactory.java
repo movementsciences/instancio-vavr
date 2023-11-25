@@ -39,10 +39,22 @@ import io.vavr.collection.TreeSet;
 import io.vavr.collection.Vector;
 
 public class VavrContainerFactory implements InternalContainerFactoryProvider {
-
-    private static final java.util.Map<Class<?>, Function<?, ?>> MAPPING_FUNCTIONS = getMappingFunctions();
-    private static final java.util.Set<Class<?>> CONTAINER_CLASSES = getContainerClasses();
-
+    private static final java.util.Set<Class<?>> CONTAINER_CLASSES = Collections.unmodifiableSet(
+        CollectionUtils.asSet(
+            Array.class,
+            CharSeq.class,
+            Vector.class,
+            List.class,
+            Stream.class,
+            Queue.class,
+            LinkedHashSet.class,
+            HashSet.class,
+            TreeSet.class,
+            LinkedHashMap.class,
+            HashMap.class,
+            TreeMap.class
+        )
+    );
 
     @SuppressWarnings("unchecked")
     private static java.util.Map<Class<?>, Function<?, ?>> getMappingFunctions() {
@@ -88,7 +100,7 @@ public class VavrContainerFactory implements InternalContainerFactoryProvider {
     @SuppressWarnings("unchecked")
     public <T, R> Function<T, R> getMappingFunction(Class<R> type, java.util.List<Class<?>> typeArguments) {
         return null;
-        //return (Function<T, R>) MAPPING_FUNCTIONS.get(type);
+        //return (Function<T, R>) getMappingFunctions().get(type);
     }
 
     @Override

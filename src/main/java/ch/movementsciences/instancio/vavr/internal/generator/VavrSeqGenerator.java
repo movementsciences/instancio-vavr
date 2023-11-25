@@ -17,6 +17,7 @@
 package ch.movementsciences.instancio.vavr.internal.generator;
 
 import static io.vavr.API.*;
+import static java.util.function.Predicate.isEqual;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,24 +30,22 @@ import org.instancio.internal.ApiValidator;
 import org.instancio.internal.generator.InternalContainerHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
-import org.instancio.settings.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.movementsciences.instancio.vavr.generator.specs.VavrCollectionSpecs;
+import io.vavr.collection.Array;
 import io.vavr.collection.List;
 import io.vavr.collection.Queue;
+import io.vavr.collection.Stream;
 import io.vavr.collection.Traversable;
+import io.vavr.collection.Vector;
 
-public class VavrCollectionGenerator<T> implements Generator<Collection<T>>, VavrCollectionSpecs<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(VavrCollectionGenerator.class);
-
+public class VavrSeqGenerator<T> implements Generator<Collection<T>>, VavrCollectionSpecs<T> {
     private static final Class<?> DEFAULT_COLLECTION_TYPE = List.class; // NOPMD
 
     private GeneratorContext context;
     private int minSize = Constants.MIN_SIZE;
     private int maxSize = Constants.MAX_SIZE;
-    private Class<?> collectionType = DEFAULT_COLLECTION_TYPE;
+    private Class<?> vavrType = DEFAULT_COLLECTION_TYPE;
 
     @Override
     public void init(final GeneratorContext context) {
@@ -65,8 +64,8 @@ public class VavrCollectionGenerator<T> implements Generator<Collection<T>>, Vav
         return Hints.builder()
                 .with(InternalContainerHint.builder()
                         .generateEntries(generateEntries)
-                                .addFunction((ArrayList<T> list, Object... args) -> list.add((T) args[0]))
-                                .buildFunction(this::buildVavrCollection)
+                        .addFunction((ArrayList<T> list, Object... args) -> list.add((T) args[0]))
+                        .buildFunction(this::buildVavrCollection)
                         .build())
                 .build();
     }
@@ -94,14 +93,17 @@ public class VavrCollectionGenerator<T> implements Generator<Collection<T>>, Vav
 
     @Override
     public VavrCollectionSpecs<T> subtype(final Class<?> type) {
-        this.collectionType = ApiValidator.notNull(type, "type must not be null");
+        this.vavrType = ApiValidator.notNull(type, "type must not be null");
         return this;
     }
 
     private Traversable<T> buildVavrCollection(ArrayList<T> list) {
-        return Match(collectionType).of(
-                Case($((c) -> c.equals(List.class)), () -> List.ofAll(list)),
-                Case($((c) -> c.equals(Queue.class)), () -> Queue.ofAll(list)),
+        return Match(vavrType).of(
+                Case($(isEqual(Array.class)), () -> Array.ofAll(list)),
+                Case($(isEqual(Vector.class)), () -> Vector.ofAll(list)),
+                Case($(isEqual(List.class)), () -> List.ofAll(list)),
+                Case($(isEqual(Stream.class)), () -> Stream.ofAll(list)),
+                Case($(isEqual(Queue.class)), () -> Queue.ofAll(list)),
                 Case($(), () -> null)
         );
     }

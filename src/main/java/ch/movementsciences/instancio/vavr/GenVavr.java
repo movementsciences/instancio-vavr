@@ -17,7 +17,7 @@
 package ch.movementsciences.instancio.vavr;
 
 import ch.movementsciences.instancio.vavr.generator.specs.VavrCollectionSpecs;
-import ch.movementsciences.instancio.vavr.internal.generator.VavrCollectionGenerator;
+import ch.movementsciences.instancio.vavr.internal.generator.VavrSeqGenerator;
 
 public class GenVavr {
 
@@ -33,6 +33,6 @@ public class GenVavr {
      * @since 0.1.0
      */
     public static <T> VavrCollectionSpecs<T> list() {
-        return new VavrCollectionGenerator<>();
+        return new VavrSeqGenerator<>();
     }
 }

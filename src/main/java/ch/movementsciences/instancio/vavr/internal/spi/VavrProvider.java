@@ -21,7 +21,7 @@ import org.instancio.generator.Generator;
 import org.instancio.generators.Generators;
 import org.instancio.spi.InstancioServiceProvider;
 
-import ch.movementsciences.instancio.vavr.internal.generator.VavrCollectionGenerator;
+import ch.movementsciences.instancio.vavr.internal.generator.VavrSeqGenerator;
 import io.vavr.collection.Array;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.HashSet;
@@ -38,16 +38,16 @@ public class VavrProvider implements InstancioServiceProvider {
         final java.util.Map<Class<?>, Generator<?>> generators = new java.util.HashMap<>();
 
         // Collections
-        final Generator<?> collectionGenerator = new VavrCollectionGenerator<>();
-        generators.put(Array.class, collectionGenerator);
-        generators.put(CharSeq.class, collectionGenerator);
-        generators.put(Vector.class, collectionGenerator);
-        generators.put(List.class, collectionGenerator);
-        generators.put(Stream.class, collectionGenerator);
-        generators.put(Queue.class, collectionGenerator);
-        generators.put(LinkedHashSet.class, collectionGenerator);
-        generators.put(HashSet.class, collectionGenerator);
-        generators.put(TreeSet.class, collectionGenerator);
+        final Generator<?> seqGenerator = new VavrSeqGenerator<>();
+        generators.put(Array.class, seqGenerator);
+        generators.put(CharSeq.class, seqGenerator);
+        generators.put(Vector.class, seqGenerator);
+        generators.put(List.class, seqGenerator);
+        generators.put(Stream.class, seqGenerator);
+        generators.put(Queue.class, seqGenerator);
+        generators.put(LinkedHashSet.class, seqGenerator);
+        generators.put(HashSet.class, seqGenerator);
+        generators.put(TreeSet.class, seqGenerator);
 
         // Maps
         /*
