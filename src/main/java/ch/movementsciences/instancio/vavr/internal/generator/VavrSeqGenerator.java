@@ -65,7 +65,7 @@ public class VavrSeqGenerator<T> implements Generator<Collection<T>>, VavrCollec
                 .with(InternalContainerHint.builder()
                         .generateEntries(generateEntries)
                         .addFunction((ArrayList<T> list, Object... args) -> list.add((T) args[0]))
-                        .buildFunction(this::buildVavrCollection)
+                        // .buildFunction(this::buildVavrCollection)
                         .build())
                 .build();
     }

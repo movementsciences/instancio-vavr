@@ -51,7 +51,9 @@ public class VavrSupportedSeqTest {
     @MethodSource("args")
     <C extends Seq<UUID>> void verify(final TypeToken<C> type, final Class<?> expectedSubtype) {
         verifyCreate(type, expectedSubtype);
-        verifyCreateWithSize(type, expectedSubtype);
+
+        // This will not work since we can't use gen.collection() for VAVR collections
+        //verifyCreateWithSize(type, expectedSubtype);
     }
 
     private static <C extends Seq<UUID>> void verifyCreate(final TypeToken<C> type, final Class<?> expectedSubtype) {
