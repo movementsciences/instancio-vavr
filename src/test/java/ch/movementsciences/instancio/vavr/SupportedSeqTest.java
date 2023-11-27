@@ -35,7 +35,7 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-public class VavrSupportedSeqTest {
+public class SupportedSeqTest {
     private static java.util.List<Arguments> args() {
         return java.util.List.of(
                 Arguments.of(new TypeToken<Array<UUID>>() {}, Array.class),
@@ -69,7 +69,7 @@ public class VavrSupportedSeqTest {
         final int size = 5;
         final var expected = Instancio.create(UUID.class);
         final var result = Instancio.of(type)
-                .generate(root(), gen -> gen.collection().size(size).with(expected))
+                .generate(root(), gen -> GenVavr.seq().size(size)/*.with(expected)*/)
                 .create();
 
         assertThat(result)

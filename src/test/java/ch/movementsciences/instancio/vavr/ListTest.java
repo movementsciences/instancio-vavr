@@ -29,9 +29,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.vavr.collection.List;
 import io.vavr.collection.Seq;
+import io.vavr.collection.Vector;
 
 @ExtendWith(InstancioExtension.class)
-class VavrListTest {
+class ListTest {
     private static final int EXPECTED_SIZE = 10;
 
     private static class Holder {
@@ -49,7 +50,7 @@ class VavrListTest {
     @Test
     void generatorSpecSize() {
         final List<String> result = Instancio.of(new TypeToken<List<String>>() {})
-                .generate(types().of(List.class), GenVavr.list().size(EXPECTED_SIZE))
+                .generate(types().of(List.class), GenVavr.seq().size(EXPECTED_SIZE))
                 .create();
 
         assertThat(result)
@@ -68,10 +69,19 @@ class VavrListTest {
     }
 
     @Test
+    void generatorSpecSubtypeNonDefault() {
+        final Holder result = Instancio.of(Holder.class)
+                .subtype(all(Seq.class), Vector.class)
+                .create();
+
+        assertThat(result.seq).isInstanceOf(Vector.class);
+    }
+
+    @Test
     void subtype() {
         final Holder result = Instancio.of(Holder.class)
                 .subtype(all(Seq.class), List.class)
-                .generate(all(Seq.class), GenVavr.list().size(EXPECTED_SIZE))
+                .generate(all(Seq.class), GenVavr.seq().size(EXPECTED_SIZE))
                 .create();
 
         assertThat(result.seq)

@@ -16,12 +16,6 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
-import static io.vavr.API.*;
-import static java.util.function.Predicate.isEqual;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
@@ -31,21 +25,17 @@ import org.instancio.internal.generator.InternalContainerHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
 
-import ch.movementsciences.instancio.vavr.generator.specs.VavrCollectionSpecs;
-import io.vavr.collection.Array;
+import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
+import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
 import io.vavr.collection.List;
-import io.vavr.collection.Queue;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Traversable;
-import io.vavr.collection.Vector;
 
-public class VavrSeqGenerator<T> implements Generator<Collection<T>>, VavrCollectionSpecs<T> {
-    private static final Class<?> DEFAULT_COLLECTION_TYPE = List.class; // NOPMD
+public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
+    private static final Class<?> DEFAULT_SEQ_TYPE = List.class; // NOPMD
 
     private GeneratorContext context;
     private int minSize = Constants.MIN_SIZE;
     private int maxSize = Constants.MAX_SIZE;
-    private Class<?> vavrType = DEFAULT_COLLECTION_TYPE;
+    private Class<?> type = DEFAULT_SEQ_TYPE;
 
     @Override
     public void init(final GeneratorContext context) {
@@ -53,8 +43,8 @@ public class VavrSeqGenerator<T> implements Generator<Collection<T>>, VavrCollec
     }
 
     @Override
-    public Collection<T> generate(final Random random) {
-        return new ArrayList<>();
+    public SeqBuilder<T> generate(final Random random) {
+        return SeqBuilder.of(type);
     }
 
     @Override
@@ -64,47 +54,36 @@ public class VavrSeqGenerator<T> implements Generator<Collection<T>>, VavrCollec
         return Hints.builder()
                 .with(InternalContainerHint.builder()
                         .generateEntries(generateEntries)
-                        .addFunction((ArrayList<T> list, Object... args) -> list.add((T) args[0]))
-                        .buildFunction(this::buildVavrCollection)
+                        .addFunction((SeqBuilder<T> builder, Object... args) -> builder.add((T) args[0]))
+                        .buildFunction((SeqBuilder<T> builder) -> builder.build())
                         .build())
                 .build();
     }
 
     @Override
-    public VavrCollectionSpecs<T> size(final int size) {
+    public SeqSpecs<T> size(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = size;
         return this;
     }
 
     @Override
-    public VavrCollectionSpecs<T> minSize(final int size) {
+    public SeqSpecs<T> minSize(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = NumberUtils.calculateNewMaxSize(maxSize, minSize);
         return this;
     }
 
     @Override
-    public VavrCollectionSpecs<T> maxSize(final int size) {
+    public SeqSpecs<T> maxSize(final int size) {
         this.maxSize = ApiValidator.validateSize(size);
         this.minSize = NumberUtils.calculateNewMinSize(minSize, maxSize);
         return this;
     }
 
     @Override
-    public VavrCollectionSpecs<T> subtype(final Class<?> type) {
-        this.vavrType = ApiValidator.notNull(type, "type must not be null");
+    public SeqSpecs<T> subtype(final Class<?> type) {
+        this.type = ApiValidator.notNull(type, "type must not be null");
         return this;
-    }
-
-    private Traversable<T> buildVavrCollection(ArrayList<T> list) {
-        return Match(vavrType).of(
-                Case($(isEqual(Array.class)), () -> Array.ofAll(list)),
-                Case($(isEqual(Vector.class)), () -> Vector.ofAll(list)),
-                Case($(isEqual(List.class)), () -> List.ofAll(list)),
-                Case($(isEqual(Stream.class)), () -> Stream.ofAll(list)),
-                Case($(isEqual(Queue.class)), () -> Queue.ofAll(list)),
-                Case($(), () -> null)
-        );
     }
 }

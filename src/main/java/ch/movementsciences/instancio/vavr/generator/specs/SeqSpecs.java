@@ -21,19 +21,21 @@ import java.util.Collection;
 import org.instancio.generator.specs.SizeGeneratorSpec;
 import org.instancio.generator.specs.SubtypeGeneratorSpec;
 
-public interface VavrCollectionSpecs<T> extends
-        SizeGeneratorSpec<Collection<T>>,
-        SubtypeGeneratorSpec<Collection<T>>
+import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
+
+public interface SeqSpecs<T> extends
+        SizeGeneratorSpec<SeqBuilder<T>>,
+        SubtypeGeneratorSpec<SeqBuilder<T>>
 {
     @Override
-    VavrCollectionSpecs<T> size(int size);
+    SeqSpecs<T> size(int size);
 
     @Override
-    VavrCollectionSpecs<T> minSize(int size);
+    SeqSpecs<T> minSize(int size);
 
     @Override
-    VavrCollectionSpecs<T> maxSize(int size);
+    SeqSpecs<T> maxSize(int size);
 
     @Override
-    VavrCollectionSpecs<T> subtype(Class<?> type);
+    SeqSpecs<T> subtype(Class<?> type);
 }

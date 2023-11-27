@@ -16,8 +16,8 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import ch.movementsciences.instancio.vavr.generator.specs.VavrCollectionSpecs;
-import ch.movementsciences.instancio.vavr.internal.generator.VavrSeqGenerator;
+import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
+import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 
 public class GenVavr {
 
@@ -26,13 +26,13 @@ public class GenVavr {
     }
 
     /**
-     * Generator spec for list.
+     * Generator spec for seq.
      *
-     * @param <T> the type of the list elements
+     * @param <T> the type of the seq elements
      * @return generator spec
      * @since 0.1.0
      */
-    public static <T> VavrCollectionSpecs<T> list() {
-        return new VavrSeqGenerator<>();
+    public static <T> SeqSpecs<T> seq() {
+        return new SeqGenerator<>();
     }
 }

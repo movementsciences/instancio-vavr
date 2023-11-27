@@ -21,7 +21,7 @@ import org.instancio.generator.Generator;
 import org.instancio.generators.Generators;
 import org.instancio.spi.InstancioServiceProvider;
 
-import ch.movementsciences.instancio.vavr.internal.generator.VavrSeqGenerator;
+import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 import io.vavr.collection.Array;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.HashSet;
@@ -38,7 +38,7 @@ public class VavrProvider implements InstancioServiceProvider {
         final java.util.Map<Class<?>, Generator<?>> generators = new java.util.HashMap<>();
 
         // Collections
-        final Generator<?> seqGenerator = new VavrSeqGenerator<>();
+        final Generator<?> seqGenerator = new SeqGenerator<>();
         generators.put(Array.class, seqGenerator);
         generators.put(CharSeq.class, seqGenerator);
         generators.put(Vector.class, seqGenerator);

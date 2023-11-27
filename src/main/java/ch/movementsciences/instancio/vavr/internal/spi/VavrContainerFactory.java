@@ -99,8 +99,7 @@ public class VavrContainerFactory implements InternalContainerFactoryProvider {
     @Override
     @SuppressWarnings("unchecked")
     public <T, R> Function<T, R> getMappingFunction(Class<R> type, java.util.List<Class<?>> typeArguments) {
-        return null;
-        //return (Function<T, R>) getMappingFunctions().get(type);
+        return (Function<T, R>) getMappingFunctions().get(type);
     }
 
     @Override
