@@ -29,6 +29,7 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
+// TODO delete
 public record SeqBuilder<T>(Class<?> type, Collection<T> items) {
 
     public static <S> SeqBuilder<S> of(Class<?> type) {

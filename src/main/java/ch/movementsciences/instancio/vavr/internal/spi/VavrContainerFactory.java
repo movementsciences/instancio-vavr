@@ -16,15 +16,6 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
-import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromCollection;
-import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromMap;
-
-import java.util.Collections;
-import java.util.function.Function;
-
-import org.instancio.internal.spi.InternalContainerFactoryProvider;
-import org.instancio.internal.util.CollectionUtils;
-
 import io.vavr.collection.Array;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.HashMap;
@@ -37,6 +28,14 @@ import io.vavr.collection.Stream;
 import io.vavr.collection.TreeMap;
 import io.vavr.collection.TreeSet;
 import io.vavr.collection.Vector;
+import org.instancio.internal.spi.InternalContainerFactoryProvider;
+import org.instancio.internal.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.function.Function;
+
+import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromCollection;
+import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromMap;
 
 public class VavrContainerFactory implements InternalContainerFactoryProvider {
     private static final java.util.Set<Class<?>> CONTAINER_CLASSES = Collections.unmodifiableSet(
@@ -77,23 +76,6 @@ public class VavrContainerFactory implements InternalContainerFactoryProvider {
         map.put(TreeMap.class, fromMap(TreeMap::ofAll));
 
         return Collections.unmodifiableMap(map);
-    }
-
-    private static java.util.Set<Class<?>> getContainerClasses() {
-        return Collections.unmodifiableSet(CollectionUtils.asSet(
-                Array.class,
-                CharSeq.class,
-                Vector.class,
-                List.class,
-                Stream.class,
-                Queue.class,
-                LinkedHashSet.class,
-                HashSet.class,
-                TreeSet.class,
-                LinkedHashMap.class,
-                HashMap.class,
-                TreeMap.class
-        ));
     }
 
     @Override

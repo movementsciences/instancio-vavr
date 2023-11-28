@@ -16,11 +16,12 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.instancio.Select.root;
-
-import java.util.UUID;
-
+import io.vavr.collection.Array;
+import io.vavr.collection.List;
+import io.vavr.collection.Queue;
+import io.vavr.collection.Seq;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
@@ -28,12 +29,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import io.vavr.collection.Array;
-import io.vavr.collection.List;
-import io.vavr.collection.Queue;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.instancio.Select.root;
 
 public class SupportedSeqTest {
     private static java.util.List<Arguments> args() {
@@ -65,11 +64,11 @@ public class SupportedSeqTest {
     }
 
     private static <C extends Seq<UUID>> void verifyCreateWithSize(final TypeToken<C> type,
-                                                                 final Class<?> expectedSubtype) {
+                                                                   final Class<?> expectedSubtype) {
         final int size = 5;
         final var expected = Instancio.create(UUID.class);
         final var result = Instancio.of(type)
-                .generate(root(), gen -> GenVavr.seq().size(size)/*.with(expected)*/)
+                .generate(root(), gen -> GenVavr.seq().size(size).with(expected))
                 .create();
 
         assertThat(result)

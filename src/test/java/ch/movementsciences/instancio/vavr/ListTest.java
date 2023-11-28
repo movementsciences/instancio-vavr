@@ -16,10 +16,9 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.instancio.Select.all;
-import static org.instancio.Select.types;
-
+import io.vavr.collection.List;
+import io.vavr.collection.Seq;
+import io.vavr.collection.Vector;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
@@ -27,9 +26,9 @@ import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.vavr.collection.List;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Vector;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.instancio.Select.all;
+import static org.instancio.Select.types;
 
 @ExtendWith(InstancioExtension.class)
 class ListTest {
@@ -79,13 +78,27 @@ class ListTest {
 
     @Test
     void subtype() {
+        final Class<?> subtype = Vector.class;
         final Holder result = Instancio.of(Holder.class)
-                .subtype(all(Seq.class), List.class)
+                .subtype(all(Seq.class), subtype)
                 .generate(all(Seq.class), GenVavr.seq().size(EXPECTED_SIZE))
                 .create();
 
         assertThat(result.seq)
-                .isInstanceOf(List.class)
+                .isInstanceOf(subtype)
+                .hasSize(EXPECTED_SIZE)
+                .doesNotContainNull();
+    }
+
+    @Test
+    void subtypeViaGeneratorSpec() {
+        final Class<?> subtype = Vector.class;
+        final Holder result = Instancio.of(Holder.class)
+                .generate(all(Seq.class), GenVavr.seq().size(EXPECTED_SIZE).subtype(subtype))
+                .create();
+
+        assertThat(result.seq)
+                .isInstanceOf(subtype)
                 .hasSize(EXPECTED_SIZE)
                 .doesNotContainNull();
     }

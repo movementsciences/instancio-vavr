@@ -19,6 +19,8 @@ package ch.movementsciences.instancio.vavr;
 import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
 import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 
+import java.util.Collection;
+
 public class GenVavr {
 
     private GenVavr() {
@@ -32,7 +34,7 @@ public class GenVavr {
      * @return generator spec
      * @since 0.1.0
      */
-    public static <T> SeqSpecs<T> seq() {
+    public static <T> SeqSpecs<Collection<T>> seq() {
         return new SeqGenerator<>();
     }
 }

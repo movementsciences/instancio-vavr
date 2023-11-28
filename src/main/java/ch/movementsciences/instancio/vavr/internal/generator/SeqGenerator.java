@@ -16,26 +16,29 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
+import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
 import org.instancio.generator.Hints;
 import org.instancio.internal.ApiValidator;
 import org.instancio.internal.generator.InternalContainerHint;
+import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
 
-import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
-import io.vavr.collection.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
-    private static final Class<?> DEFAULT_SEQ_TYPE = List.class; // NOPMD
+public class SeqGenerator<T> implements Generator<Collection<T>>, SeqSpecs<T> {
 
     private GeneratorContext context;
     private int minSize = Constants.MIN_SIZE;
     private int maxSize = Constants.MAX_SIZE;
-    private Class<?> type = DEFAULT_SEQ_TYPE;
+    private Class<?> type;
+    protected List<Object> withElements;
 
     @Override
     public void init(final GeneratorContext context) {
@@ -43,47 +46,70 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
     }
 
     @Override
-    public SeqBuilder<T> generate(final Random random) {
-        return SeqBuilder.of(type);
+    @SuppressWarnings("unchecked")
+    public Collection<T> generate(final Random random) {
+        final List<T> list = new ArrayList<>();
+        if (withElements != null) {
+            list.addAll((Collection<? extends T>) withElements);
+        }
+        return list;
     }
 
     @Override
     public Hints hints() {
         final int generateEntries = context.random().intRange(minSize, maxSize);
 
-        return Hints.builder()
+        final Hints.Builder builder = Hints.builder()
                 .with(InternalContainerHint.builder()
                         .generateEntries(generateEntries)
-                        .addFunction((SeqBuilder<T> builder, Object... args) -> builder.add((T) args[0]))
-                        .buildFunction((SeqBuilder<T> builder) -> builder.build())
-                        .build())
-                .build();
+                        .addFunction((List<T> list, Object... args) -> list.add((T) args[0]))
+                        .build());
+
+        if (type != null) {
+            builder.with(InternalGeneratorHint.builder()
+                    .targetClass(type)
+                    .build());
+        }
+
+        return builder.build();
     }
 
     @Override
-    public SeqSpecs<T> size(final int size) {
+    public SeqGenerator<T> size(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = size;
         return this;
     }
 
     @Override
-    public SeqSpecs<T> minSize(final int size) {
+    public SeqGenerator<T> minSize(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = NumberUtils.calculateNewMaxSize(maxSize, minSize);
         return this;
     }
 
     @Override
-    public SeqSpecs<T> maxSize(final int size) {
+    public SeqGenerator<T> maxSize(final int size) {
         this.maxSize = ApiValidator.validateSize(size);
         this.minSize = NumberUtils.calculateNewMinSize(minSize, maxSize);
         return this;
     }
 
     @Override
-    public SeqSpecs<T> subtype(final Class<?> type) {
+    public SeqGenerator<T> subtype(final Class<?> type) {
         this.type = ApiValidator.notNull(type, "type must not be null");
         return this;
     }
+
+    @Override
+    @SafeVarargs
+    public final SeqGenerator<T> with(Object... elements) {
+        ApiValidator.notEmpty(elements, "'seq().with(...)' must contain at least one element");
+        if (withElements == null) {
+            withElements = new ArrayList<>();
+        }
+        Collections.addAll(withElements, elements);
+        return this;
+    }
+
 }
