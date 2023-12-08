@@ -16,8 +16,7 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
-import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromCollection;
-import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromMap;
+import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromSeqBuilder;
 
 import java.util.Collections;
 import java.util.function.Function;
@@ -56,50 +55,10 @@ public class VavrContainerFactory implements InternalContainerFactoryProvider {
         )
     );
 
-    @SuppressWarnings("unchecked")
-    private static java.util.Map<Class<?>, Function<?, ?>> getMappingFunctions() {
-        final java.util.Map<Class<?>, Function<?, ?>> map = new java.util.HashMap<>();
-
-        // Collections
-        map.put(Array.class, fromCollection(Array::ofAll));
-        map.put(CharSeq.class, fromCollection(CharSeq::ofAll));
-        map.put(Vector.class, fromCollection(Vector::ofAll));
-        map.put(List.class, fromCollection(List::ofAll));
-        map.put(Stream.class, fromCollection(Stream::ofAll));
-        map.put(Queue.class, fromCollection(Queue::ofAll));
-        map.put(LinkedHashSet.class, fromCollection(LinkedHashSet::ofAll));
-        map.put(HashSet.class, fromCollection(HashSet::ofAll));
-        map.put(TreeSet.class, fromCollection(TreeSet::ofAll));
-
-        // Maps
-        map.put(LinkedHashMap.class, fromMap(LinkedHashMap::ofAll));
-        map.put(HashMap.class, fromMap(HashMap::ofAll));
-        map.put(TreeMap.class, fromMap(TreeMap::ofAll));
-
-        return Collections.unmodifiableMap(map);
-    }
-
-    private static java.util.Set<Class<?>> getContainerClasses() {
-        return Collections.unmodifiableSet(CollectionUtils.asSet(
-                Array.class,
-                CharSeq.class,
-                Vector.class,
-                List.class,
-                Stream.class,
-                Queue.class,
-                LinkedHashSet.class,
-                HashSet.class,
-                TreeSet.class,
-                LinkedHashMap.class,
-                HashMap.class,
-                TreeMap.class
-        ));
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public <T, R> Function<T, R> getMappingFunction(Class<R> type, java.util.List<Class<?>> typeArguments) {
-        return (Function<T, R>) getMappingFunctions().get(type);
+        return (Function<T, R>) fromSeqBuilder(x -> x.build(type));
     }
 
     @Override

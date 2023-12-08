@@ -16,12 +16,15 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
+import java.util.ArrayList;
+
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
 import org.instancio.generator.Hints;
 import org.instancio.internal.ApiValidator;
 import org.instancio.internal.generator.InternalContainerHint;
+import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
 
@@ -30,12 +33,11 @@ import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
 import io.vavr.collection.List;
 
 public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
-    private static final Class<?> DEFAULT_SEQ_TYPE = List.class; // NOPMD
-
     private GeneratorContext context;
     private int minSize = Constants.MIN_SIZE;
     private int maxSize = Constants.MAX_SIZE;
-    private Class<?> type = DEFAULT_SEQ_TYPE;
+    private Class<?> type;
+    private List<Object> withElements;
 
     @Override
     public void init(final GeneratorContext context) {
@@ -44,20 +46,26 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
 
     @Override
     public SeqBuilder<T> generate(final Random random) {
-        return SeqBuilder.of(type);
+        return new SeqBuilder<>(new ArrayList<>());
     }
 
     @Override
     public Hints hints() {
         final int generateEntries = context.random().intRange(minSize, maxSize);
 
-        return Hints.builder()
+        final var hintsBuilder = Hints.builder()
                 .with(InternalContainerHint.builder()
                         .generateEntries(generateEntries)
                         .addFunction((SeqBuilder<T> builder, Object... args) -> builder.add((T) args[0]))
-                        .buildFunction((SeqBuilder<T> builder) -> builder.build())
-                        .build())
-                .build();
+                        .build());
+
+        if (type != null) {
+            hintsBuilder.with(InternalGeneratorHint.builder()
+                    .targetClass(type)
+                    .build());
+        }
+
+        return hintsBuilder.build();
     }
 
     @Override

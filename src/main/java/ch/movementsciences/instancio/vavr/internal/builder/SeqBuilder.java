@@ -19,7 +19,6 @@ package ch.movementsciences.instancio.vavr.internal.builder;
 import static io.vavr.API.*;
 import static java.util.function.Predicate.isEqual;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import io.vavr.collection.Array;
@@ -29,17 +28,13 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-public record SeqBuilder<T>(Class<?> type, Collection<T> items) {
-
-    public static <S> SeqBuilder<S> of(Class<?> type) {
-        return new SeqBuilder<>(type, new ArrayList<>());
-    }
+public record SeqBuilder<T>(Collection<T> items) {
 
     public void add(T item) {
         items.add(item);
     }
 
-    public Seq<T> build() {
+    public Seq<T> build(Class<?> type) {
         return Match(type).of(
                 Case($(isEqual(Array.class)), () -> Array.ofAll(items)),
                 Case($(isEqual(Vector.class)), () -> Vector.ofAll(items)),

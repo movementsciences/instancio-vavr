@@ -16,9 +16,9 @@
 
 package ch.movementsciences.instancio.vavr.internal.util;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.function.Function;
+
+import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
 
 public class VavrFunctions {
 
@@ -26,14 +26,7 @@ public class VavrFunctions {
         // non-instantiable
     }
 
-    @SuppressWarnings("rawtypes")
-    public static <R> Function<Collection, R> fromCollection(Function<Collection, R> fn) {
-        return fn;
-    }
-
-
-    @SuppressWarnings("rawtypes")
-    public static <R> Function<Map, R> fromMap(Function<Map, R> fn) {
+    public static <R> Function<SeqBuilder<?>, R> fromSeqBuilder(Function<SeqBuilder<?>, R> fn) {
         return fn;
     }
 }
