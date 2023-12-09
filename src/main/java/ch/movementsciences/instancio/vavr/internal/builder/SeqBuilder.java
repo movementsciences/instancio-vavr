@@ -28,12 +28,17 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-public record SeqBuilder<T>(Collection<T> items) {
+public record SeqBuilder<T>(Collection<T> items) implements VavrBuilder<Seq<T>> {
+
+    public static <T> SeqBuilder<T> from(Seq<T> elements) {
+        return new SeqBuilder<>(elements.toJavaList());
+    }
 
     public void add(T item) {
         items.add(item);
     }
 
+    @Override
     public Seq<T> build(Class<?> type) {
         return Match(type).of(
                 Case($(isEqual(Array.class)), () -> Array.ofAll(items)),
@@ -41,7 +46,7 @@ public record SeqBuilder<T>(Collection<T> items) {
                 Case($(isEqual(List.class)), () -> List.ofAll(items)),
                 Case($(isEqual(Stream.class)), () -> Stream.ofAll(items)),
                 Case($(isEqual(Queue.class)), () -> Queue.ofAll(items)),
-                Case($(), () -> null)
+                Case($(), () -> List.ofAll(items))
         );  
     }
     

@@ -22,6 +22,7 @@ import org.instancio.generator.specs.SizeGeneratorSpec;
 import org.instancio.generator.specs.SubtypeGeneratorSpec;
 
 import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
+import io.vavr.collection.Seq;
 
 public interface SeqSpecs<T> extends
         SizeGeneratorSpec<SeqBuilder<T>>,
@@ -38,4 +39,6 @@ public interface SeqSpecs<T> extends
 
     @Override
     SeqSpecs<T> subtype(Class<?> type);
+
+    SeqSpecs<T> with(T ...elements);
 }

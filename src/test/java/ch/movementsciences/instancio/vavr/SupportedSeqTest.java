@@ -69,7 +69,7 @@ public class SupportedSeqTest {
         final int size = 5;
         final var expected = Instancio.create(UUID.class);
         final var result = Instancio.of(type)
-                .generate(root(), gen -> GenVavr.seq().size(size)/*.with(expected)*/)
+                .generate(root(), gen -> GenVavr.seq().size(size).with(expected))
                 .create();
 
         assertThat(result)

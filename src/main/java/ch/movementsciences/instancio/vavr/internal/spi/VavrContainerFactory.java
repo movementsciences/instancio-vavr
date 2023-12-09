@@ -16,53 +16,28 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
-import static ch.movementsciences.instancio.vavr.internal.util.VavrFunctions.fromSeqBuilder;
-
-import java.util.Collections;
 import java.util.function.Function;
 
 import org.instancio.internal.spi.InternalContainerFactoryProvider;
-import org.instancio.internal.util.CollectionUtils;
 
-import io.vavr.collection.Array;
-import io.vavr.collection.CharSeq;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.LinkedHashSet;
-import io.vavr.collection.List;
-import io.vavr.collection.Queue;
-import io.vavr.collection.Stream;
-import io.vavr.collection.TreeMap;
-import io.vavr.collection.TreeSet;
-import io.vavr.collection.Vector;
+import ch.movementsciences.instancio.vavr.internal.builder.VavrBuilder;
+import io.vavr.collection.Seq;
 
 public class VavrContainerFactory implements InternalContainerFactoryProvider {
-    private static final java.util.Set<Class<?>> CONTAINER_CLASSES = Collections.unmodifiableSet(
-        CollectionUtils.asSet(
-            Array.class,
-            CharSeq.class,
-            Vector.class,
-            List.class,
-            Stream.class,
-            Queue.class,
-            LinkedHashSet.class,
-            HashSet.class,
-            TreeSet.class,
-            LinkedHashMap.class,
-            HashMap.class,
-            TreeMap.class
-        )
-    );
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T, R> Function<T, R> getMappingFunction(Class<R> type, java.util.List<Class<?>> typeArguments) {
-        return (Function<T, R>) fromSeqBuilder(x -> x.build(type));
+        return (t) -> {
+            if (t instanceof VavrBuilder<?> builder) {
+                final var builtType = builder.build(type);
+                return type.cast(builtType);
+            }
+            return null;
+        };
     }
 
     @Override
     public boolean isContainer(final Class<?> type) {
-        return CONTAINER_CLASSES.contains(type);
+        return Seq.class.isAssignableFrom(type);
     }
 }

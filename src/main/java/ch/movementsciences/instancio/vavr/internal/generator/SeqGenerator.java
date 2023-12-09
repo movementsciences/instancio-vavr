@@ -16,8 +16,6 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
-import java.util.ArrayList;
-
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
@@ -33,11 +31,12 @@ import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
 import io.vavr.collection.List;
 
 public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
+
     private GeneratorContext context;
     private int minSize = Constants.MIN_SIZE;
     private int maxSize = Constants.MAX_SIZE;
-    private Class<?> type;
-    private List<Object> withElements;
+    private Class<?> subtype;
+    private List<T> withElements = List.empty();
 
     @Override
     public void init(final GeneratorContext context) {
@@ -46,7 +45,7 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
 
     @Override
     public SeqBuilder<T> generate(final Random random) {
-        return new SeqBuilder<>(new ArrayList<>());
+        return SeqBuilder.from(withElements);
     }
 
     @Override
@@ -59,9 +58,9 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
                         .addFunction((SeqBuilder<T> builder, Object... args) -> builder.add((T) args[0]))
                         .build());
 
-        if (type != null) {
+        if (subtype != null) {
             hintsBuilder.with(InternalGeneratorHint.builder()
-                    .targetClass(type)
+                    .targetClass(subtype)
                     .build());
         }
 
@@ -91,7 +90,15 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
 
     @Override
     public SeqSpecs<T> subtype(final Class<?> type) {
-        this.type = ApiValidator.notNull(type, "type must not be null");
+        this.subtype = ApiValidator.notNull(type, "type must not be null");
+        return this;
+    }
+
+    @Override
+    @SafeVarargs
+    public final SeqSpecs<T> with(T... elements) {
+        ApiValidator.notEmpty(elements, "'seq().with(...)' must contain at least one element");
+        withElements = withElements.appendAll(List.of(elements));
         return this;
     }
 }

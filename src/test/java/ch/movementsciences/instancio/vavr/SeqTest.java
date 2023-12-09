@@ -32,7 +32,7 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
 
 @ExtendWith(InstancioExtension.class)
-class ListTest {
+class SeqTest {
     private static final int EXPECTED_SIZE = 10;
 
     private static class Holder {
@@ -41,7 +41,7 @@ class ListTest {
 
     @Test
     void createListViaTypeToken() {
-        final var result = Instancio.create(new TypeToken<List<String>>() {});
+        final var result = Instancio.create(new TypeToken<Seq<String>>() {});
 
         assertThat(result).isInstanceOf(List.class);
         assertThat(result.size()).isBetween(Constants.MIN_SIZE, Constants.MAX_SIZE);
@@ -49,8 +49,8 @@ class ListTest {
 
     @Test
     void generatorSpecSize() {
-        final List<String> result = Instancio.of(new TypeToken<List<String>>() {})
-                .generate(types().of(List.class), GenVavr.seq().size(EXPECTED_SIZE))
+        final var result = Instancio.of(new TypeToken<Seq<String>>() {})
+                .generate(types().of(Seq.class), GenVavr.seq().size(EXPECTED_SIZE))
                 .create();
 
         assertThat(result)
@@ -61,16 +61,7 @@ class ListTest {
 
     @Test
     void generatorSpecSubtype() {
-        final Holder result = Instancio.of(Holder.class)
-                .subtype(all(Seq.class), List.class)
-                .create();
-
-        assertThat(result.seq).isInstanceOf(List.class);
-    }
-
-    @Test
-    void generatorSpecSubtypeNonDefault() {
-        final Holder result = Instancio.of(Holder.class)
+        final var result = Instancio.of(Holder.class)
                 .subtype(all(Seq.class), Vector.class)
                 .create();
 
@@ -79,14 +70,24 @@ class ListTest {
 
     @Test
     void subtype() {
-        final Holder result = Instancio.of(Holder.class)
-                .subtype(all(Seq.class), List.class)
+        final var result = Instancio.of(Holder.class)
+                .subtype(all(Seq.class), Vector.class)
                 .generate(all(Seq.class), GenVavr.seq().size(EXPECTED_SIZE))
                 .create();
 
         assertThat(result.seq)
-                .isInstanceOf(List.class)
+                .isInstanceOf(Vector.class)
                 .hasSize(EXPECTED_SIZE)
+                .doesNotContainNull();
+    }
+
+    @Test
+    void defaultType() {
+        final var result = Instancio.of(Holder.class)
+                .create();
+
+        assertThat(result.seq)
+                .isInstanceOf(List.class)
                 .doesNotContainNull();
     }
 }

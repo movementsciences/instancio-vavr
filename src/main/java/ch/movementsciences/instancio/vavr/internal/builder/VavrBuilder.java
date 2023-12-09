@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package ch.movementsciences.instancio.vavr.internal.util;
+package ch.movementsciences.instancio.vavr.internal.builder;
 
-import java.util.function.Function;
-
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
-
-public class VavrFunctions {
-
-    private VavrFunctions() {
-        // non-instantiable
-    }
-
-    public static <R> Function<SeqBuilder<?>, R> fromSeqBuilder(Function<SeqBuilder<?>, R> fn) {
-        return fn;
-    }
+public interface VavrBuilder<T> {
+    T build(Class<?> type);
 }
