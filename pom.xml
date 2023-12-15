@@ -30,6 +30,7 @@
     <vavr.version>0.10.4</vavr.version>
     <junit.version>5.10.1</junit.version>
     <assertj.version>3.11.1</assertj.version>
+    <logback.version>1.4.8</logback.version>
   </properties>
 
   <dependencies>
@@ -43,6 +44,12 @@
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
       <version>${vavr.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
