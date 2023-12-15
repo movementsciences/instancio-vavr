@@ -22,13 +22,16 @@ import org.instancio.Node;
 import org.instancio.generators.Generators;
 import org.instancio.spi.InstancioServiceProvider;
 
+import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
+import io.vavr.collection.CharSeq;
 import io.vavr.collection.Seq;
 
 public class VavrProvider implements InstancioServiceProvider {
     @Override
     public GeneratorProvider getGeneratorProvider() {
         return (Node node, Generators gen) -> Match(node.getTargetClass()).of(
+                Case($(CharSeq.class::isAssignableFrom), CharSeqGenerator::new),
                 Case($(Seq.class::isAssignableFrom), () -> new SeqGenerator<>()),
                 Case($(), () -> null)
         );

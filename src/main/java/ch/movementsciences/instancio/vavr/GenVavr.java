@@ -16,7 +16,9 @@
 
 package ch.movementsciences.instancio.vavr;
 
+import ch.movementsciences.instancio.vavr.generator.specs.CharSeqSpecs;
 import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
+import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 
 public class GenVavr {
@@ -34,5 +36,17 @@ public class GenVavr {
      */
     public static <T> SeqSpecs<T> seq() {
         return new SeqGenerator<>();
+    }
+
+
+
+    /**
+     * Generator spec for charSeq.
+     *
+     * @return generator spec
+     * @since 0.1.0
+     */
+    public static CharSeqSpecs charSeq() {
+        return new CharSeqGenerator();
     }
 }

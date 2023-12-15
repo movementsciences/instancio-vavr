@@ -39,7 +39,6 @@ public class SupportedSeqTest {
     private static java.util.List<Arguments> args() {
         return java.util.List.of(
                 Arguments.of(new TypeToken<Array<UUID>>() {}, Array.class),
-                //Arguments.of(new TypeToken<CharSeq>() {}, CharSeq.class),
                 Arguments.of(new TypeToken<Vector<UUID>>() {}, Vector.class),
                 Arguments.of(new TypeToken<List<UUID>>() {}, List.class),
                 Arguments.of(new TypeToken<Stream<UUID>>() {}, Stream.class),
