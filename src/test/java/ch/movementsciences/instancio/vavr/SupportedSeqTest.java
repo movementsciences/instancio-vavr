@@ -16,11 +16,14 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.instancio.Select.root;
-
-import java.util.UUID;
-
+import io.vavr.collection.Array;
+import io.vavr.collection.IndexedSeq;
+import io.vavr.collection.LinearSeq;
+import io.vavr.collection.List;
+import io.vavr.collection.Queue;
+import io.vavr.collection.Seq;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
@@ -28,16 +31,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import io.vavr.collection.Array;
-import io.vavr.collection.List;
-import io.vavr.collection.Queue;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
+import java.util.UUID;
 
-public class SupportedSeqTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.instancio.Select.root;
+
+class SupportedSeqTest {
     private static java.util.List<Arguments> args() {
         return java.util.List.of(
+                Arguments.of(new TypeToken<IndexedSeq<UUID>>() {}, IndexedSeq.class),
                 Arguments.of(new TypeToken<Array<UUID>>() {}, Array.class),
                 Arguments.of(new TypeToken<Vector<UUID>>() {}, Vector.class),
                 Arguments.of(new TypeToken<List<UUID>>() {}, List.class),

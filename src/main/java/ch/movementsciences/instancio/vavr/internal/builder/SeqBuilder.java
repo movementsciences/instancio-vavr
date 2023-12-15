@@ -16,17 +16,20 @@
 
 package ch.movementsciences.instancio.vavr.internal.builder;
 
-import static io.vavr.API.*;
-import static java.util.function.Predicate.isEqual;
-
-import java.util.Collection;
-
 import io.vavr.collection.Array;
+import io.vavr.collection.IndexedSeq;
 import io.vavr.collection.List;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
+
+import java.util.Collection;
+
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static java.util.function.Predicate.isEqual;
 
 public record SeqBuilder<T>(Collection<T> items) implements VavrBuilder<Seq<T>> {
 
@@ -41,13 +44,14 @@ public record SeqBuilder<T>(Collection<T> items) implements VavrBuilder<Seq<T>> 
     @Override
     public Seq<T> build(Class<?> type) {
         return Match(type).of(
+                Case($(isEqual(IndexedSeq.class)), () -> Array.ofAll(items)),
                 Case($(isEqual(Array.class)), () -> Array.ofAll(items)),
                 Case($(isEqual(Vector.class)), () -> Vector.ofAll(items)),
                 Case($(isEqual(List.class)), () -> List.ofAll(items)),
                 Case($(isEqual(Stream.class)), () -> Stream.ofAll(items)),
                 Case($(isEqual(Queue.class)), () -> Queue.ofAll(items)),
                 Case($(), () -> List.ofAll(items))
-        );  
+        );
     }
-    
+
 }
