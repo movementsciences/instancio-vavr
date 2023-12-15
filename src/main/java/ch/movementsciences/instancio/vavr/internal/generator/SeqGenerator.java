@@ -20,29 +20,27 @@ import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
 import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
 import io.vavr.collection.List;
 import org.instancio.Random;
-import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
 import org.instancio.generator.Hints;
 import org.instancio.internal.ApiValidator;
 import org.instancio.internal.RandomHelper;
+import org.instancio.internal.generator.AbstractGenerator;
 import org.instancio.internal.generator.InternalContainerHint;
 import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.util.NumberUtils;
 import org.instancio.settings.Keys;
 import org.instancio.support.Global;
 
-public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
+public class SeqGenerator<T> extends AbstractGenerator<SeqBuilder<T>> implements SeqSpecs<T> {
 
-    private GeneratorContext context;
     private int minSize;
     private int maxSize;
     private Class<?> subtype;
     private List<T> withElements = List.empty();
-    private boolean nullable = false;
 
     public SeqGenerator(final GeneratorContext context) {
-        this.context = context;
-        this.nullable(context.getSettings().get(Keys.COLLECTION_NULLABLE));
+        super(context);
+        super.nullable(context.getSettings().get(Keys.COLLECTION_NULLABLE));
         this.minSize = context.getSettings().get(Keys.COLLECTION_MIN_SIZE);
         this.maxSize = context.getSettings().get(Keys.COLLECTION_MAX_SIZE);
     }
@@ -52,8 +50,13 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
     }
 
     @Override
-    public SeqBuilder<T> generate(final Random random) {
-        return random.diceRoll(isNullable()) ? null : SeqBuilder.from(withElements);
+    public String apiMethod() {
+        return null;
+    }
+
+    @Override
+    public SeqBuilder<T> tryGenerateNonNull(final Random random) {
+        return SeqBuilder.from(withElements);
     }
 
     @SuppressWarnings("unchecked")
@@ -67,7 +70,8 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
                 .with(InternalGeneratorHint.builder()
                         .nullableResult(isNullable())
                         .targetClass(subtype)
-                        .build()).build();
+                        .build())
+                .build();
     }
 
     @Override
@@ -107,22 +111,19 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
 
     @Override
     public SeqSpecs<T> nullable() {
-        nullable = true;
+        super.nullable(true);
         return this;
     }
 
+    @Override
     public SeqSpecs<T> nullable(final boolean isNullable) {
-        nullable = isNullable;
+        super.nullable(isNullable);
         return this;
-    }
-
-    public final boolean isNullable() {
-        return nullable;
     }
 
     private Random getRandom() {
-        return context.random() != null
-                ? context.random()
-                : RandomHelper.resolveRandom(context.getSettings().get(Keys.SEED), null);
+        return getContext().random() != null
+                ? getContext().random()
+                : RandomHelper.resolveRandom(getContext().getSettings().get(Keys.SEED), null);
     }
 }
