@@ -42,6 +42,8 @@ class SupportedSeqTest {
                 Arguments.of(new TypeToken<IndexedSeq<UUID>>() {}, IndexedSeq.class),
                 Arguments.of(new TypeToken<Array<UUID>>() {}, Array.class),
                 Arguments.of(new TypeToken<Vector<UUID>>() {}, Vector.class),
+                Arguments.of(new TypeToken<Seq<UUID>>() {}, Seq.class),
+                Arguments.of(new TypeToken<LinearSeq<UUID>>() {}, LinearSeq.class),
                 Arguments.of(new TypeToken<List<UUID>>() {}, List.class),
                 Arguments.of(new TypeToken<Stream<UUID>>() {}, Stream.class),
                 Arguments.of(new TypeToken<Queue<UUID>>() {}, Queue.class)
