@@ -16,12 +16,12 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
+import java.util.function.Function;
+
 import ch.movementsciences.instancio.vavr.internal.builder.VavrBuilder;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.Seq;
 import org.instancio.internal.spi.InternalContainerFactoryProvider;
-
-import java.util.function.Function;
 
 public class VavrContainerFactory implements InternalContainerFactoryProvider {
 

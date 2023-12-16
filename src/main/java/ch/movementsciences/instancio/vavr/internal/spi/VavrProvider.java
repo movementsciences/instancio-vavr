@@ -16,6 +16,10 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+
 import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 import io.vavr.collection.CharSeq;
@@ -25,8 +29,6 @@ import org.instancio.generator.GeneratorContext;
 import org.instancio.generators.Generators;
 import org.instancio.spi.InstancioServiceProvider;
 import org.instancio.spi.ServiceProviderContext;
-
-import static io.vavr.API.*;
 
 public class VavrProvider implements InstancioServiceProvider {
 
@@ -38,6 +40,7 @@ public class VavrProvider implements InstancioServiceProvider {
                 providerContext.getSettings(),
                 providerContext.random());
     }
+
     @Override
     public GeneratorProvider getGeneratorProvider() {
         return (Node node, Generators gen) -> Match(node.getTargetClass()).of(
