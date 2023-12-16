@@ -16,6 +16,7 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
+import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.Seq;
