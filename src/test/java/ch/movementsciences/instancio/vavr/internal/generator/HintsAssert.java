@@ -21,6 +21,8 @@ import org.instancio.generator.Hints;
 import org.instancio.internal.generator.InternalContainerHint;
 import org.instancio.internal.generator.InternalGeneratorHint;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("UnusedReturnValue")
@@ -46,6 +48,15 @@ public class HintsAssert extends AbstractAssert<HintsAssert, Hints> {
 
     public HintsAssert nullableResult(boolean expected) {
         assertThat(actual.get(InternalGeneratorHint.class).nullableResult()).isEqualTo(expected);
+        return this;
+    }
+
+    public HintsAssert isEmpty() {
+        assertThat(actual)
+                .extracting("hintMap")
+                .isInstanceOfSatisfying(Map.class, map ->
+                        assertThat(map).isEmpty()
+                );
         return this;
     }
 }

@@ -16,11 +16,13 @@
 
 package ch.movementsciences.instancio.vavr.generator.specs;
 
+import io.vavr.collection.CharSeq;
+import org.instancio.generator.specs.NullableGeneratorSpec;
 import org.instancio.generator.specs.SizeGeneratorSpec;
 
-import io.vavr.collection.CharSeq;
-
-public interface CharSeqSpecs extends SizeGeneratorSpec<CharSeq> {
+public interface CharSeqSpecs extends
+        SizeGeneratorSpec<CharSeq>,
+        NullableGeneratorSpec<CharSeq> {
     @Override
     CharSeqSpecs size(int size);
 
@@ -31,4 +33,7 @@ public interface CharSeqSpecs extends SizeGeneratorSpec<CharSeq> {
     CharSeqSpecs maxSize(int size);
 
     CharSeqSpecs with(String str);
+
+    @Override
+    CharSeqSpecs nullable();
 }

@@ -16,21 +16,23 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
-import java.util.function.Function;
-
+import ch.movementsciences.instancio.vavr.internal.builder.VavrBuilder;
+import io.vavr.collection.CharSeq;
+import io.vavr.collection.Seq;
 import org.instancio.internal.spi.InternalContainerFactoryProvider;
 
-import ch.movementsciences.instancio.vavr.internal.builder.VavrBuilder;
-import io.vavr.collection.Seq;
+import java.util.function.Function;
 
 public class VavrContainerFactory implements InternalContainerFactoryProvider {
 
     @Override
     public <T, R> Function<T, R> getMappingFunction(Class<R> type, java.util.List<Class<?>> typeArguments) {
-        return (t) -> {
+        return (T t) -> {
             if (t instanceof VavrBuilder<?> builder) {
                 final var builtType = builder.build(type);
                 return type.cast(builtType);
+            } else if (t instanceof CharSeq charSeq) {
+                return type.cast(charSeq);
             }
             return null;
         };

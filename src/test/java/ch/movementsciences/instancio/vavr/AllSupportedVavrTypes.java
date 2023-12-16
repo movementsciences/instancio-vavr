@@ -16,13 +16,7 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import io.vavr.collection.Array;
-import io.vavr.collection.IndexedSeq;
-import io.vavr.collection.List;
-import io.vavr.collection.Queue;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
+import io.vavr.collection.*;
 
 import java.util.UUID;
 
@@ -30,10 +24,12 @@ public record AllSupportedVavrTypes(
 
         // Sequences
         Seq<UUID> seq,
-        List<UUID> list,
-        Queue<UUID> queue,
-        Stream<UUID> stream,
         IndexedSeq<UUID> indexedSeq,
         Array<UUID> array,
-        Vector<UUID> vector
+        Vector<UUID> vector,
+        LinearSeq<UUID> linearSeq,
+        List<UUID> list,
+        Stream<UUID> stream,
+        Queue<UUID> queue,
+        CharSeq charSeq
 ) {}

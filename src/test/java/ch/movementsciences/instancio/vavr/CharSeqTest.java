@@ -16,19 +16,20 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.instancio.Select.all;
-import static org.instancio.Select.types;
-
+import io.vavr.collection.CharSeq;
+import io.vavr.collection.Seq;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
 import org.instancio.junit.InstancioExtension;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.vavr.collection.CharSeq;
-import io.vavr.collection.Seq;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.instancio.Select.all;
+import static org.instancio.Select.types;
 
 @ExtendWith(InstancioExtension.class)
 class CharSeqTest {
@@ -42,8 +43,10 @@ class CharSeqTest {
     void createListViaTypeToken() {
         final var result = Instancio.create(new TypeToken<CharSeq>() {});
 
-        assertThat(result.getClass()).isEqualTo(CharSeq.class);
-        assertThat(result.size()).isBetween(Constants.MIN_SIZE, Constants.MAX_SIZE);
+
+        assertThat((Iterable<?>) result)
+                .isInstanceOf(CharSeq.class)
+                .hasSizeBetween(Constants.MIN_SIZE, Constants.MAX_SIZE);
     }
 
     @Test
@@ -52,8 +55,23 @@ class CharSeqTest {
                 .generate(types().of(Seq.class), GenVavr.charSeq().size(EXPECTED_SIZE))
                 .create();
 
-        assertThat(result.getClass()).isEqualTo(CharSeq.class);
-        assertThat(result.size()).isEqualTo(EXPECTED_SIZE);
+        assertThat((Iterable<?>) result)
+                .isInstanceOf(CharSeq.class)
+                .hasSize(EXPECTED_SIZE)
+                .doesNotContainNull();
+    }
+
+    @Test
+    void generatorSettingsSize() {
+        final var result = Instancio.of(new TypeToken<CharSeq>() {})
+                .withSettings(Settings.create()
+                        .set(Keys.COLLECTION_MIN_SIZE, 1)
+                        .set(Keys.COLLECTION_MAX_SIZE, 10))
+                .create();
+
+        assertThat((Iterable<?>) result)
+                .isInstanceOf(CharSeq.class)
+                .hasSizeBetween(1, 10);
     }
 
     @Test

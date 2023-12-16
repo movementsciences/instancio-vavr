@@ -26,9 +26,7 @@ import org.instancio.generators.Generators;
 import org.instancio.spi.InstancioServiceProvider;
 import org.instancio.spi.ServiceProviderContext;
 
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
-import static io.vavr.API.Match;
+import static io.vavr.API.*;
 
 public class VavrProvider implements InstancioServiceProvider {
 
@@ -43,7 +41,7 @@ public class VavrProvider implements InstancioServiceProvider {
     @Override
     public GeneratorProvider getGeneratorProvider() {
         return (Node node, Generators gen) -> Match(node.getTargetClass()).of(
-                Case($(CharSeq.class::isAssignableFrom), CharSeqGenerator::new),
+                Case($(CharSeq.class::isAssignableFrom), () -> new CharSeqGenerator(generatorContext)),
                 Case($(Seq.class::isAssignableFrom), () -> new SeqGenerator<>(generatorContext)),
                 Case($(), () -> null)
         );
