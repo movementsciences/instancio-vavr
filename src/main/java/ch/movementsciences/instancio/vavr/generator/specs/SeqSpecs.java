@@ -16,18 +16,15 @@
 
 package ch.movementsciences.instancio.vavr.generator.specs;
 
-import java.util.Collection;
-
+import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
+import org.instancio.generator.specs.NullableGeneratorSpec;
 import org.instancio.generator.specs.SizeGeneratorSpec;
 import org.instancio.generator.specs.SubtypeGeneratorSpec;
 
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
-import io.vavr.collection.Seq;
-
 public interface SeqSpecs<T> extends
         SizeGeneratorSpec<SeqBuilder<T>>,
-        SubtypeGeneratorSpec<SeqBuilder<T>>
-{
+        SubtypeGeneratorSpec<SeqBuilder<T>>,
+        NullableGeneratorSpec<SeqBuilder<T>> {
     @Override
     SeqSpecs<T> size(int size);
 
@@ -40,5 +37,9 @@ public interface SeqSpecs<T> extends
     @Override
     SeqSpecs<T> subtype(Class<?> type);
 
-    SeqSpecs<T> with(T ...elements);
+    @SuppressWarnings("unchecked")
+    SeqSpecs<T> with(T... elements);
+
+    @Override
+    SeqSpecs<T> nullable();
 }

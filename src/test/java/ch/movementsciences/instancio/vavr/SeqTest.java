@@ -16,20 +16,21 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.instancio.Select.all;
-import static org.instancio.Select.types;
-
+import io.vavr.collection.List;
+import io.vavr.collection.Seq;
+import io.vavr.collection.Vector;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
 import org.instancio.junit.InstancioExtension;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.vavr.collection.List;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Vector;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.instancio.Select.all;
+import static org.instancio.Select.types;
 
 @ExtendWith(InstancioExtension.class)
 class SeqTest {
@@ -43,8 +44,9 @@ class SeqTest {
     void createListViaTypeToken() {
         final var result = Instancio.create(new TypeToken<Seq<String>>() {});
 
-        assertThat(result).isInstanceOf(List.class);
-        assertThat(result.size()).isBetween(Constants.MIN_SIZE, Constants.MAX_SIZE);
+        assertThat(result)
+                .isInstanceOf(List.class)
+                .hasSizeBetween(Constants.MIN_SIZE, Constants.MAX_SIZE);
     }
 
     @Test
@@ -60,12 +62,27 @@ class SeqTest {
     }
 
     @Test
+    void generatorSettingsSize() {
+        final var result = Instancio.of(new TypeToken<Seq<String>>() {})
+                .withSettings(Settings.create()
+                        .set(Keys.COLLECTION_MIN_SIZE, 1)
+                        .set(Keys.COLLECTION_MAX_SIZE, 10))
+                .create();
+
+        assertThat(result)
+                .isInstanceOf(List.class)
+                .hasSizeBetween(1, 10);
+    }
+
+    @Test
     void generatorSpecSubtype() {
         final var result = Instancio.of(Holder.class)
                 .subtype(all(Seq.class), Vector.class)
                 .create();
 
-        assertThat(result.seq).isInstanceOf(Vector.class);
+        assertThat(result.seq)
+                .isInstanceOf(Seq.class)
+                .isExactlyInstanceOf(Vector.class);
     }
 
     @Test
@@ -76,7 +93,8 @@ class SeqTest {
                 .create();
 
         assertThat(result.seq)
-                .isInstanceOf(Vector.class)
+                .isInstanceOf(Seq.class)
+                .isExactlyInstanceOf(Vector.class)
                 .hasSize(EXPECTED_SIZE)
                 .doesNotContainNull();
     }

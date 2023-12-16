@@ -29,7 +29,7 @@
     <instancio.version>3.6.0</instancio.version>
     <vavr.version>0.10.4</vavr.version>
     <junit.version>5.10.1</junit.version>
-    <assertj.version>3.11.1</assertj.version>
+    <assertj.version>3.24.2</assertj.version>
     <logback.version>1.4.8</logback.version>
   </properties>
 

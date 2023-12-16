@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package ch.movementsciences.instancio.vavr.generator.specs;
+package ch.movementsciences.instancio.vavr;
 
-import io.vavr.collection.CharSeq;
-import org.instancio.generator.specs.NullableGeneratorSpec;
-import org.instancio.generator.specs.SizeGeneratorSpec;
+import io.vavr.collection.*;
 
-public interface CharSeqSpecs extends
-        SizeGeneratorSpec<CharSeq>,
-        NullableGeneratorSpec<CharSeq> {
-    @Override
-    CharSeqSpecs size(int size);
+import java.util.UUID;
 
-    @Override
-    CharSeqSpecs minSize(int size);
+public record AllSupportedVavrTypes(
 
-    @Override
-    CharSeqSpecs maxSize(int size);
-
-    CharSeqSpecs with(String str);
-
-    @Override
-    CharSeqSpecs nullable();
-}
+        // Sequences
+        Seq<UUID> seq,
+        IndexedSeq<UUID> indexedSeq,
+        Array<UUID> array,
+        Vector<UUID> vector,
+        LinearSeq<UUID> linearSeq,
+        List<UUID> list,
+        Stream<UUID> stream,
+        Queue<UUID> queue,
+        CharSeq charSeq
+) {}

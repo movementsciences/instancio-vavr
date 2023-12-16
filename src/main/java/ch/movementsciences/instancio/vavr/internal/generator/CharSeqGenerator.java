@@ -16,38 +16,43 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
-import org.instancio.Random;
-import org.instancio.generator.Generator;
-import org.instancio.generator.GeneratorContext;
-import org.instancio.generator.Hints;
-import org.instancio.internal.ApiValidator;
-import org.instancio.internal.generator.InternalContainerHint;
-import org.instancio.internal.generator.InternalGeneratorHint;
-import org.instancio.internal.generator.lang.StringGenerator;
-import org.instancio.internal.util.Constants;
-import org.instancio.internal.util.NumberUtils;
-
 import ch.movementsciences.instancio.vavr.generator.specs.CharSeqSpecs;
-import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.List;
+import org.instancio.Random;
+import org.instancio.generator.GeneratorContext;
+import org.instancio.internal.ApiValidator;
+import org.instancio.internal.generator.AbstractGenerator;
+import org.instancio.internal.generator.lang.StringGenerator;
+import org.instancio.internal.util.NumberUtils;
+import org.instancio.settings.Keys;
+import org.instancio.support.Global;
 
-public class CharSeqGenerator implements Generator<CharSeq>, CharSeqSpecs {
+public class CharSeqGenerator extends AbstractGenerator<CharSeq> implements CharSeqSpecs {
 
-    private GeneratorContext context;
-    private int minSize = Constants.MIN_SIZE;
-    private int maxSize = Constants.MAX_SIZE;
+    protected int minSize;
+    protected int maxSize;
     private CharSeq withElements = CharSeq.empty();
 
-    @Override
-    public void init(final GeneratorContext context) {
-        this.context = context;
+    public CharSeqGenerator(final GeneratorContext context) {
+        super(context);
+        super.nullable(context.getSettings().get(Keys.COLLECTION_NULLABLE));
+        this.minSize = context.getSettings().get(Keys.COLLECTION_MIN_SIZE);
+        this.maxSize = context.getSettings().get(Keys.COLLECTION_MAX_SIZE);
+    }
+
+    public CharSeqGenerator() {
+        this(Global.generatorContext());
     }
 
     @Override
-    public CharSeq generate(final Random random) {
-        final var str = new StringGenerator(context)
+    public String apiMethod() {
+        return null;
+    }
+
+    @Override
+    protected CharSeq tryGenerateNonNull(final Random random) {
+        final var str = new StringGenerator(getContext())
                 .minLength(maxSize)
                 .maxLength(maxSize)
                 .generate(random);
@@ -80,6 +85,18 @@ public class CharSeqGenerator implements Generator<CharSeq>, CharSeqSpecs {
     public final CharSeqSpecs with(String str) {
         ApiValidator.isFalse(str.isEmpty(), "'chaSeq().with(...)' must contain a non-empty string");
         withElements = withElements.appendAll(List.ofAll(str.toCharArray()));
+        return this;
+    }
+
+    @Override
+    public CharSeqSpecs nullable() {
+        super.nullable(true);
+        return this;
+    }
+
+    @Override
+    public CharSeqSpecs nullable(final boolean isNullable) {
+        super.nullable(isNullable);
         return this;
     }
 }
