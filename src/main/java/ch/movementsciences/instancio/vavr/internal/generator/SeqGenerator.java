@@ -33,8 +33,8 @@ import org.instancio.support.Global;
 
 public class SeqGenerator<T> extends AbstractGenerator<SeqBuilder<T>> implements SeqSpecs<T> {
 
-    private int minSize;
-    private int maxSize;
+    protected int minSize;
+    protected int maxSize;
     private Class<?> subtype;
     private List<T> withElements = List.empty();
 
@@ -55,7 +55,7 @@ public class SeqGenerator<T> extends AbstractGenerator<SeqBuilder<T>> implements
     }
 
     @Override
-    public SeqBuilder<T> tryGenerateNonNull(final Random random) {
+    protected SeqBuilder<T> tryGenerateNonNull(final Random random) {
         return SeqBuilder.from(withElements);
     }
 
