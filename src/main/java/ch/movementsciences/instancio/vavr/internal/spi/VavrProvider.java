@@ -18,6 +18,8 @@ package ch.movementsciences.instancio.vavr.internal.spi;
 
 import static io.vavr.API.*;
 
+import ch.movementsciences.instancio.vavr.internal.generator.SetGenerator;
+import io.vavr.collection.Set;
 import org.instancio.Node;
 import org.instancio.generators.Generators;
 import org.instancio.spi.InstancioServiceProvider;
@@ -33,6 +35,7 @@ public class VavrProvider implements InstancioServiceProvider {
         return (Node node, Generators gen) -> Match(node.getTargetClass()).of(
                 Case($(CharSeq.class::isAssignableFrom), CharSeqGenerator::new),
                 Case($(Seq.class::isAssignableFrom), () -> new SeqGenerator<>()),
+                Case($(Set.class::isAssignableFrom), () -> new SetGenerator<>()),
                 Case($(), () -> null)
         );
     }

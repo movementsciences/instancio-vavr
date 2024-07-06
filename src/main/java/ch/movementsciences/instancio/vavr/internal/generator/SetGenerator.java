@@ -16,6 +16,10 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
+import ch.movementsciences.instancio.vavr.generator.specs.SetSpecs;
+import ch.movementsciences.instancio.vavr.internal.builder.SetBuilder;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
@@ -23,22 +27,16 @@ import org.instancio.generator.Hints;
 import org.instancio.internal.ApiValidator;
 import org.instancio.internal.generator.InternalContainerHint;
 import org.instancio.internal.generator.InternalGeneratorHint;
-import org.instancio.internal.generator.lang.StringGenerator;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
 
-import ch.movementsciences.instancio.vavr.generator.specs.CharSeqSpecs;
-import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
-import io.vavr.collection.CharSeq;
-import io.vavr.collection.List;
-
-public class CharSeqGenerator implements Generator<CharSeq>, CharSeqSpecs {
+public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
 
     private GeneratorContext context;
     private int minSize = Constants.MIN_SIZE;
     private int maxSize = Constants.MAX_SIZE;
-    private CharSeq withElements = CharSeq.empty();
+    private Class<?> subtype;
+    private Set<T> withElements = HashSet.empty();
 
     @Override
     public void init(final GeneratorContext context) {
@@ -46,40 +44,61 @@ public class CharSeqGenerator implements Generator<CharSeq>, CharSeqSpecs {
     }
 
     @Override
-    public CharSeq generate(final Random random) {
-        final var str = new StringGenerator(context)
-                .minLength(maxSize)
-                .maxLength(maxSize)
-                .generate(random);
-
-        return CharSeq.of(str);
+    public SetBuilder<T> generate(final Random random) {
+        return SetBuilder.from(withElements);
     }
 
     @Override
-    public CharSeqSpecs size(final int size) {
+    public Hints hints() {
+        final int generateEntries = context.random().intRange(minSize, maxSize);
+
+        final var hintsBuilder = Hints.builder()
+                .with(InternalContainerHint.builder()
+                        .generateEntries(generateEntries)
+                        .addFunction((SetBuilder<T> builder, Object... args) -> builder.add((T) args[0]))
+                        .build());
+
+        if (subtype != null) {
+            hintsBuilder.with(InternalGeneratorHint.builder()
+                    .targetClass(subtype)
+                    .build());
+        }
+
+        return hintsBuilder.build();
+    }
+
+    @Override
+    public SetSpecs<T> size(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = size;
         return this;
     }
 
     @Override
-    public CharSeqSpecs minSize(final int size) {
+    public SetSpecs<T> minSize(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = NumberUtils.calculateNewMaxSize(maxSize, minSize);
         return this;
     }
 
     @Override
-    public CharSeqSpecs maxSize(final int size) {
+    public SetSpecs<T> maxSize(final int size) {
         this.maxSize = ApiValidator.validateSize(size);
         this.minSize = NumberUtils.calculateNewMinSize(minSize, maxSize);
         return this;
     }
 
     @Override
-    public final CharSeqSpecs with(String str) {
-        ApiValidator.isFalse(str.isEmpty(), "'charSeq().with(...)' must contain a non-empty string");
-        withElements = withElements.appendAll(List.ofAll(str.toCharArray()));
+    public SetSpecs<T> subtype(final Class<?> type) {
+        this.subtype = ApiValidator.notNull(type, "type must not be null");
+        return this;
+    }
+
+    @Override
+    @SafeVarargs
+    public final SetSpecs<T> with(T... elements) {
+        ApiValidator.notEmpty(elements, "'Set().with(...)' must contain at least one element");
+        withElements = withElements.addAll(HashSet.of(elements));
         return this;
     }
 }
