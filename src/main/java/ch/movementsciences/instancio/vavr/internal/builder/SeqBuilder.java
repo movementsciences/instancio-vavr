@@ -16,17 +16,19 @@
 
 package ch.movementsciences.instancio.vavr.internal.builder;
 
-import static io.vavr.API.*;
-import static java.util.function.Predicate.isEqual;
-
-import java.util.Collection;
-
 import io.vavr.collection.Array;
 import io.vavr.collection.List;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
+
+import java.util.Collection;
+
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static java.util.function.Predicate.isEqual;
 
 public record SeqBuilder<T>(Collection<T> items) implements VavrBuilder<Seq<T>> {
 

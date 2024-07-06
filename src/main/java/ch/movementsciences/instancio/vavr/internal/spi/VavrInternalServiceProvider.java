@@ -17,6 +17,7 @@
 package ch.movementsciences.instancio.vavr.internal.spi;
 
 import ch.movementsciences.instancio.vavr.internal.builder.VavrBuilder;
+import io.vavr.collection.CharSeq;
 import io.vavr.collection.Seq;
 import org.instancio.internal.spi.InternalServiceProvider;
 
@@ -41,7 +42,7 @@ public class VavrInternalServiceProvider implements InternalServiceProvider {
 
             @Override
             public boolean isContainer(final Class<?> type) {
-                return Seq.class.isAssignableFrom(type);
+                return Seq.class.isAssignableFrom(type) && !CharSeq.class.isAssignableFrom(type);
             }
         };
     }
