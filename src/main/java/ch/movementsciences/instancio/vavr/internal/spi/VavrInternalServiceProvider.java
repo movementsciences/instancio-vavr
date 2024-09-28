@@ -18,12 +18,21 @@ package ch.movementsciences.instancio.vavr.internal.spi;
 
 import ch.movementsciences.instancio.vavr.internal.builder.VavrBuilder;
 import io.vavr.collection.CharSeq;
+import io.vavr.collection.List;
+import io.vavr.collection.Seq;
 import io.vavr.collection.Traversable;
+import io.vavr.control.Option;
 import org.instancio.internal.spi.InternalServiceProvider;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class VavrInternalServiceProvider implements InternalServiceProvider {
+
+    private static final Seq<Predicate<Class<?>>> VAVR_CONTAINERS = List.of(
+        (Class<?> type) -> Traversable.class.isAssignableFrom(type) && !CharSeq.class.isAssignableFrom(type),
+        Option.class::isAssignableFrom
+    );
 
     @Override
     public InternalContainerFactoryProvider getContainerFactoryProvider() {
@@ -32,7 +41,10 @@ public class VavrInternalServiceProvider implements InternalServiceProvider {
             @Override
             public <T, R> Function<T, R> getMappingFunction(Class<R> type, java.util.List<Class<?>> typeArguments) {
                 return (t) -> {
-                    if (t instanceof VavrBuilder<?> builder) {
+                    if (VAVR_CONTAINERS.find(predicate -> predicate.test(t.getClass())).isDefined()) {
+                        return type.cast(t);
+                    }
+                    else if (t instanceof VavrBuilder<?> builder) {
                         final var builtType = builder.build(type);
                         return type.cast(builtType);
                     }
@@ -42,7 +54,7 @@ public class VavrInternalServiceProvider implements InternalServiceProvider {
 
             @Override
             public boolean isContainer(final Class<?> type) {
-                return Traversable.class.isAssignableFrom(type) && !CharSeq.class.isAssignableFrom(type);
+                return VAVR_CONTAINERS.find(predicate -> predicate.test(type)).isDefined();
             }
         };
     }

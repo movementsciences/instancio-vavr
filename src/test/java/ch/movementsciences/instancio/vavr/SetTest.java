@@ -16,9 +16,9 @@
 
 package ch.movementsciences.instancio.vavr;
 
-import io.vavr.collection.HashMap;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.Map;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.LinkedHashSet;
+import io.vavr.collection.Set;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
@@ -31,29 +31,29 @@ import static org.instancio.Select.all;
 import static org.instancio.Select.types;
 
 @ExtendWith(InstancioExtension.class)
-class MapTest {
+class SetTest {
     private static final int EXPECTED_SIZE = 10;
 
     private static class Holder {
-        public Map<Long, String> map;
+        public Set<String> set;
     }
 
     @Test
-    void createMapViaTypeToken() {
-        final var result = Instancio.create(new TypeToken<Map<Long, String>>() {});
+    void createListViaTypeToken() {
+        final var result = Instancio.create(new TypeToken<Set<String>>() {});
 
-        assertThat(result).isInstanceOf(HashMap.class);
+        assertThat(result).isInstanceOf(Set.class);
         assertThat(result.size()).isBetween(Constants.MIN_SIZE, Constants.MAX_SIZE);
     }
 
     @Test
     void generatorSpecSize() {
-        final var result = Instancio.of(new TypeToken<Map<Long, String>>() {})
-                .generate(types().of(Map.class), GenVavr.map().size(EXPECTED_SIZE))
+        final var result = Instancio.of(new TypeToken<Set<String>>() {})
+                .generate(types().of(Set.class), GenVavr.set().size(EXPECTED_SIZE))
                 .create();
 
         assertThat(result)
-                .isInstanceOf(Map.class)
+                .isInstanceOf(HashSet.class)
                 .hasSize(EXPECTED_SIZE)
                 .doesNotContainNull();
     }
@@ -61,21 +61,21 @@ class MapTest {
     @Test
     void generatorSpecSubtype() {
         final var result = Instancio.of(Holder.class)
-                .subtype(all(Map.class), LinkedHashMap.class)
+                .subtype(all(Set.class), LinkedHashSet.class)
                 .create();
 
-        assertThat(result.map).isInstanceOf(LinkedHashMap.class);
+        assertThat(result.set).isInstanceOf(LinkedHashSet.class);
     }
 
     @Test
     void subtype() {
         final var result = Instancio.of(Holder.class)
-                .subtype(all(Map.class), LinkedHashMap.class)
-                .generate(all(Map.class), GenVavr.map().size(EXPECTED_SIZE))
+                .subtype(all(Set.class), LinkedHashSet.class)
+                .generate(all(Set.class), GenVavr.set().size(EXPECTED_SIZE))
                 .create();
 
-        assertThat(result.map)
-                .isInstanceOf(LinkedHashMap.class)
+        assertThat(result.set)
+                .isInstanceOf(LinkedHashSet.class)
                 .hasSize(EXPECTED_SIZE)
                 .doesNotContainNull();
     }
@@ -85,8 +85,8 @@ class MapTest {
         final var result = Instancio.of(Holder.class)
                 .create();
 
-        assertThat(result.map)
-                .isInstanceOf(Map.class)
+        assertThat(result.set)
+                .isInstanceOf(HashSet.class)
                 .doesNotContainNull();
     }
 }

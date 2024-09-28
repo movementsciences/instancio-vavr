@@ -18,10 +18,12 @@ package ch.movementsciences.instancio.vavr;
 
 import ch.movementsciences.instancio.vavr.generator.specs.CharSeqSpecs;
 import ch.movementsciences.instancio.vavr.generator.specs.MapSpecs;
+import ch.movementsciences.instancio.vavr.generator.specs.OptionSpecs;
 import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
 import ch.movementsciences.instancio.vavr.generator.specs.SetSpecs;
 import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.MapGenerator;
+import ch.movementsciences.instancio.vavr.internal.generator.OptionGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SetGenerator;
 
@@ -71,7 +73,16 @@ public class GenVavr {
      * @return generator spec
      * @since 0.1.0
      */
-    public static <K, V> MapSpecs<K, V> map() {
-        return new MapGenerator<>();
+    public static <K, V> MapSpecs<K, V> map() { return new MapGenerator<>(); }
+
+    /**
+     * Generator spec for option.
+     *
+     * @param <T> the type of the option element
+     * @return generator spec
+     * @since 0.1.0
+     */
+    public static <T> OptionSpecs<T> option() {
+        return new OptionGenerator<>();
     }
 }
