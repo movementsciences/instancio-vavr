@@ -36,5 +36,6 @@ public interface SetSpecs<T> extends
     @Override
     SetSpecs<T> subtype(Class<?> type);
 
+    @SuppressWarnings("unchecked")
     SetSpecs<T> with(T ...elements);
 }

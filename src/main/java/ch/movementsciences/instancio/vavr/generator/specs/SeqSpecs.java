@@ -40,5 +40,6 @@ public interface SeqSpecs<T> extends
     @Override
     SeqSpecs<T> subtype(Class<?> type);
 
+    @SuppressWarnings("unchecked")
     SeqSpecs<T> with(T ...elements);
 }
