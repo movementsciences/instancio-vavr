@@ -16,13 +16,9 @@
 
 package ch.movementsciences.instancio.vavr.generator.specs;
 
-import java.util.Collection;
-
+import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
 import org.instancio.generator.specs.SizeGeneratorSpec;
 import org.instancio.generator.specs.SubtypeGeneratorSpec;
-
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
-import io.vavr.collection.Seq;
 
 public interface SeqSpecs<T> extends
         SizeGeneratorSpec<SeqBuilder<T>>,

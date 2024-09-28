@@ -16,22 +16,16 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
+import ch.movementsciences.instancio.vavr.generator.specs.CharSeqSpecs;
+import io.vavr.collection.CharSeq;
+import io.vavr.collection.List;
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
-import org.instancio.generator.Hints;
 import org.instancio.internal.ApiValidator;
-import org.instancio.internal.generator.InternalContainerHint;
-import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.generator.lang.StringGenerator;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
-
-import ch.movementsciences.instancio.vavr.generator.specs.CharSeqSpecs;
-import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
-import io.vavr.collection.CharSeq;
-import io.vavr.collection.List;
 
 public class CharSeqGenerator implements Generator<CharSeq>, CharSeqSpecs {
 

@@ -16,6 +16,9 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
+import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
+import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
+import io.vavr.collection.List;
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
@@ -25,10 +28,6 @@ import org.instancio.internal.generator.InternalContainerHint;
 import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
-
-import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
-import ch.movementsciences.instancio.vavr.internal.builder.SeqBuilder;
-import io.vavr.collection.List;
 
 public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
 
@@ -48,6 +47,7 @@ public class SeqGenerator<T> implements Generator<SeqBuilder<T>>, SeqSpecs<T> {
         return SeqBuilder.from(withElements);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Hints hints() {
         final int generateEntries = context.random().intRange(minSize, maxSize);

@@ -16,10 +16,11 @@
 
 package ch.movementsciences.instancio.vavr.internal.generator;
 
-import ch.movementsciences.instancio.vavr.generator.specs.SetSpecs;
-import ch.movementsciences.instancio.vavr.internal.builder.SetBuilder;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.Set;
+import ch.movementsciences.instancio.vavr.generator.specs.MapSpecs;
+import ch.movementsciences.instancio.vavr.internal.builder.MapBuilder;
+import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 import org.instancio.Random;
 import org.instancio.generator.Generator;
 import org.instancio.generator.GeneratorContext;
@@ -30,13 +31,13 @@ import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
 
-public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
+public class MapGenerator<K, V> implements Generator<MapBuilder<K, V>>, MapSpecs<K, V> {
 
     private GeneratorContext context;
     private int minSize = Constants.MIN_SIZE;
     private int maxSize = Constants.MAX_SIZE;
     private Class<?> subtype;
-    private Set<T> withElements = HashSet.empty();
+    private Map<K, V> withElements = HashMap.empty();
 
     @Override
     public void init(final GeneratorContext context) {
@@ -44,8 +45,8 @@ public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
     }
 
     @Override
-    public SetBuilder<T> generate(final Random random) {
-        return SetBuilder.from(withElements);
+    public MapBuilder<K, V> generate(final Random random) {
+        return MapBuilder.from(withElements);
     }
 
     @SuppressWarnings("unchecked")
@@ -56,7 +57,9 @@ public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
         final var hintsBuilder = Hints.builder()
                 .with(InternalContainerHint.builder()
                         .generateEntries(generateEntries)
-                        .addFunction((SetBuilder<T> builder, Object... args) -> builder.add((T) args[0]))
+                        .addFunction((MapBuilder<K, V> builder, Object... args) ->
+                            builder.add((K) args[0], (V) args[1])
+                        )
                         .build());
 
         if (subtype != null) {
@@ -69,37 +72,37 @@ public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
     }
 
     @Override
-    public SetSpecs<T> size(final int size) {
+    public MapSpecs<K, V> size(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = size;
         return this;
     }
 
     @Override
-    public SetSpecs<T> minSize(final int size) {
+    public MapSpecs<K, V> minSize(final int size) {
         this.minSize = ApiValidator.validateSize(size);
         this.maxSize = NumberUtils.calculateNewMaxSize(maxSize, minSize);
         return this;
     }
 
     @Override
-    public SetSpecs<T> maxSize(final int size) {
+    public MapSpecs<K, V> maxSize(final int size) {
         this.maxSize = ApiValidator.validateSize(size);
         this.minSize = NumberUtils.calculateNewMinSize(minSize, maxSize);
         return this;
     }
 
     @Override
-    public SetSpecs<T> subtype(final Class<?> type) {
+    public MapSpecs<K, V> subtype(final Class<?> type) {
         this.subtype = ApiValidator.notNull(type, "type must not be null");
         return this;
     }
 
     @Override
     @SafeVarargs
-    public final SetSpecs<T> with(T... elements) {
-        ApiValidator.notEmpty(elements, "'Set().with(...)' must contain at least one element");
-        withElements = withElements.addAll(HashSet.of(elements));
+    public final MapSpecs<K, V> with(Tuple2<K, V>... elements) {
+        ApiValidator.notEmpty(elements, "'map().with(...)' must contain at least one element");
+        withElements = withElements.merge(HashMap.ofEntries(elements));
         return this;
     }
 }

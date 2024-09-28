@@ -17,9 +17,11 @@
 package ch.movementsciences.instancio.vavr;
 
 import ch.movementsciences.instancio.vavr.generator.specs.CharSeqSpecs;
+import ch.movementsciences.instancio.vavr.generator.specs.MapSpecs;
 import ch.movementsciences.instancio.vavr.generator.specs.SeqSpecs;
 import ch.movementsciences.instancio.vavr.generator.specs.SetSpecs;
 import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
+import ch.movementsciences.instancio.vavr.internal.generator.MapGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SetGenerator;
 
@@ -40,8 +42,6 @@ public class GenVavr {
         return new SeqGenerator<>();
     }
 
-
-
     /**
      * Generator spec for charSeq.
      *
@@ -61,5 +61,17 @@ public class GenVavr {
      */
     public static <T> SetSpecs<T> set() {
         return new SetGenerator<>();
+    }
+
+    /**
+     * Generator spec for map.
+     *
+     * @param <K> the type of the map keys
+     * @param <V> the type of the map elements
+     * @return generator spec
+     * @since 0.1.0
+     */
+    public static <K, V> MapSpecs<K, V> map() {
+        return new MapGenerator<>();
     }
 }

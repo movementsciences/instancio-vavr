@@ -16,18 +16,27 @@
 
 package ch.movementsciences.instancio.vavr.generator.specs;
 
-import io.vavr.collection.CharSeq;
+import ch.movementsciences.instancio.vavr.internal.builder.MapBuilder;
+import io.vavr.Tuple2;
 import org.instancio.generator.specs.SizeGeneratorSpec;
+import org.instancio.generator.specs.SubtypeGeneratorSpec;
 
-public interface CharSeqSpecs extends SizeGeneratorSpec<CharSeq> {
+public interface MapSpecs<K, V> extends
+        SizeGeneratorSpec<MapBuilder<K, V>>,
+        SubtypeGeneratorSpec<MapBuilder<K, V>>
+{
     @Override
-    CharSeqSpecs size(int size);
+    MapSpecs<K, V> size(int size);
 
     @Override
-    CharSeqSpecs minSize(int size);
+    MapSpecs<K, V> minSize(int size);
 
     @Override
-    CharSeqSpecs maxSize(int size);
+    MapSpecs<K, V> maxSize(int size);
 
-    CharSeqSpecs with(String str);
+    @Override
+    MapSpecs<K, V> subtype(Class<?> type);
+
+    @SuppressWarnings("unchecked")
+    MapSpecs<K, V> with(Tuple2<K, V>... elements);
 }

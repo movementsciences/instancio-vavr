@@ -16,18 +16,21 @@
 
 package ch.movementsciences.instancio.vavr.internal.spi;
 
-import static io.vavr.API.*;
-
+import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
+import ch.movementsciences.instancio.vavr.internal.generator.MapGenerator;
+import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
 import ch.movementsciences.instancio.vavr.internal.generator.SetGenerator;
+import io.vavr.collection.CharSeq;
+import io.vavr.collection.Map;
+import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 import org.instancio.Node;
 import org.instancio.generators.Generators;
 import org.instancio.spi.InstancioServiceProvider;
 
-import ch.movementsciences.instancio.vavr.internal.generator.CharSeqGenerator;
-import ch.movementsciences.instancio.vavr.internal.generator.SeqGenerator;
-import io.vavr.collection.CharSeq;
-import io.vavr.collection.Seq;
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
 
 public class VavrProvider implements InstancioServiceProvider {
     @Override
@@ -36,6 +39,7 @@ public class VavrProvider implements InstancioServiceProvider {
                 Case($(CharSeq.class::isAssignableFrom), CharSeqGenerator::new),
                 Case($(Seq.class::isAssignableFrom), () -> new SeqGenerator<>()),
                 Case($(Set.class::isAssignableFrom), () -> new SetGenerator<>()),
+                Case($(Map.class::isAssignableFrom), () -> new MapGenerator<>()),
                 Case($(), () -> null)
         );
     }

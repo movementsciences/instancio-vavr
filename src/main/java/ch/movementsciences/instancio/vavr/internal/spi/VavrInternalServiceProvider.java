@@ -18,7 +18,6 @@ package ch.movementsciences.instancio.vavr.internal.spi;
 
 import ch.movementsciences.instancio.vavr.internal.builder.VavrBuilder;
 import io.vavr.collection.CharSeq;
-import io.vavr.collection.Seq;
 import io.vavr.collection.Traversable;
 import org.instancio.internal.spi.InternalServiceProvider;
 

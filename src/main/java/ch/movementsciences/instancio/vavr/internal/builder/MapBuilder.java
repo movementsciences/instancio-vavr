@@ -16,34 +16,32 @@
 
 package ch.movementsciences.instancio.vavr.internal.builder;
 
-import io.vavr.collection.HashSet;
-import io.vavr.collection.LinkedHashSet;
-import io.vavr.collection.Set;
-
-import java.util.Collection;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.Map;
 
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.Match;
 import static java.util.function.Predicate.isEqual;
 
-public record SetBuilder<T>(Collection<T> items) implements VavrBuilder<Set<T>> {
+public record MapBuilder<K, V>(java.util.Map<K, V> items) implements VavrBuilder<Map<K, V>> {
 
-    public static <T> SetBuilder<T> from(Set<T> elements) {
-        return new SetBuilder<>(elements.toJavaList());
+    public static <K, V> MapBuilder<K, V> from(Map<K, V> elements) {
+        return new MapBuilder<>(elements.toJavaMap());
     }
 
-    public void add(T item) {
-        items.add(item);
+    public void add(K key, V value) {
+        items.put(key, value);
     }
 
     @Override
-    public Set<T> build(Class<?> type) {
+    public Map<K, V> build(Class<?> type) {
         return Match(type).of(
-                Case($(isEqual(LinkedHashSet.class)), () -> LinkedHashSet.ofAll(items)),
-                Case($(isEqual(HashSet.class)), () -> HashSet.ofAll(items)),
-                //Case($(isEqual(TreeSet.class)), () -> TreeSet.ofAll(items)),
-                Case($(), () -> HashSet.ofAll(items))
+                Case($(isEqual(LinkedHashMap.class)), () -> LinkedHashMap.ofAll(items)),
+                Case($(isEqual(HashMap.class)), () -> HashMap.ofAll(items)),
+                //Case($(isEqual(TreeMap.class)), () -> TreeMap.ofAll(items)),
+                Case($(), () -> HashMap.ofAll(items))
         );  
     }
     
