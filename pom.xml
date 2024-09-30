@@ -9,8 +9,7 @@
   <version>0.1.0-SNAPSHOT</version>
 
   <name>instancio-vavr</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>https://github.com/movementsciences/instancio-vavr</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,11 +25,11 @@
     <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
     <maven-pmd-plugin.version>3.21.2</maven-pmd-plugin.version>
 
-    <instancio.version>4.8.1</instancio.version>
+    <instancio.version>5.0.2</instancio.version>
     <vavr.version>0.10.4</vavr.version>
-    <junit.version>5.10.1</junit.version>
-    <assertj.version>3.11.1</assertj.version>
-    <logback.version>1.4.8</logback.version>
+    <junit.version>5.10.3</junit.version>
+    <assertj.version>3.26.3</assertj.version>
+    <logback.version>1.5.6</logback.version>
   </properties>
 
   <dependencies>
@@ -136,4 +135,11 @@
       </plugins>
     </pluginManagement>
   </build>
+  <repositories>
+    <repository>
+      <id>maven_central</id>
+      <name>Maven Central</name>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </repository>
+  </repositories>
 </project>
