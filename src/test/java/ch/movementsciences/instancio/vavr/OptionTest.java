@@ -29,6 +29,10 @@ import static org.instancio.Select.types;
 @ExtendWith(InstancioExtension.class)
 class OptionTest {
 
+    private static class Holder {
+        public Option<String> option;
+    }
+
     @Test
     void createOptionViaTypeToken() {
         final var result = Instancio.create(new TypeToken<Option<String>>() {});
@@ -45,5 +49,15 @@ class OptionTest {
 
         assertThat(result).isInstanceOf(Option.class);
         assertThat(result.isEmpty()).isTrue();
+    }
+
+    @Test
+    void defaultType() {
+        final var result = Instancio.of(OptionTest.Holder.class)
+            .create();
+
+        assertThat(result.option)
+            .isInstanceOf(Option.class)
+            .doesNotContainNull();
     }
 }
