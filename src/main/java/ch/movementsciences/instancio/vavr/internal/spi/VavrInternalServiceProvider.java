@@ -40,16 +40,17 @@ public class VavrInternalServiceProvider implements InternalServiceProvider {
 
             @Override
             public <T, R> Function<T, R> getMappingFunction(Class<R> type, java.util.List<Class<?>> typeArguments) {
-                return (t) -> {
-                    if (VAVR_CONTAINERS.find(predicate -> predicate.test(t.getClass())).isDefined()) {
-                        return type.cast(t);
-                    }
-                    else if (t instanceof VavrBuilder<?> builder) {
-                        final var builtType = builder.build(type);
-                        return type.cast(builtType);
-                    }
-                    return null;
-                };
+                if (VAVR_CONTAINERS.find(predicate -> predicate.test(type)).isDefined()) {
+                    return (t) -> {
+                        if (t instanceof VavrBuilder<?> builder) {
+                            final var builtType = builder.build(type);
+                            return type.cast(builtType);
+                        } else {
+                            return type.cast(t);
+                        }
+                    };
+                }
+                return null;
             }
 
             @Override
