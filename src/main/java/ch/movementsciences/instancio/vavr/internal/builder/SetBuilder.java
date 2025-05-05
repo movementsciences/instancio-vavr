@@ -19,18 +19,21 @@ package ch.movementsciences.instancio.vavr.internal.builder;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.LinkedHashSet;
 import io.vavr.collection.Set;
+import io.vavr.collection.SortedSet;
+import io.vavr.collection.TreeSet;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.Match;
 import static java.util.function.Predicate.isEqual;
 
-public record SetBuilder<T>(Collection<T> items) implements VavrBuilder<Set<T>> {
+public record SetBuilder<T>(Collection<T> items, Comparator<T> comparator) implements VavrBuilder<Set<T>> {
 
-    public static <T> SetBuilder<T> from(Set<T> elements) {
-        return new SetBuilder<>(elements.toJavaList());
+    public static <T> SetBuilder<T> from(Set<T> elements, Comparator<T> comparator) {
+        return new SetBuilder<>(elements.toJavaList(), comparator);
     }
 
     public void add(T item) {
@@ -42,9 +45,15 @@ public record SetBuilder<T>(Collection<T> items) implements VavrBuilder<Set<T>> 
         return Match(type).of(
                 Case($(isEqual(LinkedHashSet.class)), () -> LinkedHashSet.ofAll(items)),
                 Case($(isEqual(HashSet.class)), () -> HashSet.ofAll(items)),
-                //Case($(isEqual(TreeSet.class)), () -> TreeSet.ofAll(items)),
+                Case($(isEqual(TreeSet.class)), () -> comparator != null
+                    ? TreeSet.ofAll(comparator, items)
+                    : HashSet.ofAll(items).toSortedSet()
+                ),
+                Case($(isEqual(SortedSet.class)), () -> comparator != null
+                    ? TreeSet.ofAll(comparator, items)
+                    : HashSet.ofAll(items).toSortedSet()
+                ),
                 Case($(), () -> HashSet.ofAll(items))
         );  
     }
-    
 }
