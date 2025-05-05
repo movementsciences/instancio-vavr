@@ -21,6 +21,8 @@ import io.vavr.Tuple2;
 import org.instancio.generator.specs.SizeGeneratorSpec;
 import org.instancio.generator.specs.SubtypeGeneratorSpec;
 
+import java.util.Comparator;
+
 public interface MapSpecs<K, V> extends
         SizeGeneratorSpec<MapBuilder<K, V>>,
         SubtypeGeneratorSpec<MapBuilder<K, V>>
@@ -39,4 +41,6 @@ public interface MapSpecs<K, V> extends
 
     @SuppressWarnings("unchecked")
     MapSpecs<K, V> with(Tuple2<K, V>... elements);
+
+    MapSpecs<K, V> comparator(Comparator<K> comparator);
 }

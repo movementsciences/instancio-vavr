@@ -19,6 +19,8 @@ package ch.movementsciences.instancio.vavr;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.LinkedHashSet;
 import io.vavr.collection.Set;
+import io.vavr.collection.SortedSet;
+import io.vavr.collection.TreeSet;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
@@ -36,6 +38,10 @@ class SetTest {
 
     private static class Holder {
         public Set<String> set;
+    }
+
+    private static class SortedHolder {
+        public SortedSet<String> set;
     }
 
     @Test
@@ -88,5 +94,15 @@ class SetTest {
         assertThat(result.set)
                 .isInstanceOf(HashSet.class)
                 .doesNotContainNull();
+    }
+
+    @Test
+    void defaultSortedType() {
+        final var result = Instancio.of(SortedHolder.class)
+            .create();
+
+        assertThat(result.set)
+            .isInstanceOf(TreeSet.class)
+            .doesNotContainNull();
     }
 }

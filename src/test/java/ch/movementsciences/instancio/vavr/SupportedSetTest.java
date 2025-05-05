@@ -19,6 +19,7 @@ package ch.movementsciences.instancio.vavr;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.LinkedHashSet;
 import io.vavr.collection.Set;
+import io.vavr.collection.TreeSet;
 import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.internal.util.Constants;
@@ -35,8 +36,8 @@ public class SupportedSetTest {
     private static java.util.List<Arguments> args() {
         return java.util.List.of(
                 Arguments.of(new TypeToken<LinkedHashSet<UUID>>() {}, LinkedHashSet.class),
-                Arguments.of(new TypeToken<HashSet<UUID>>() {}, HashSet.class)
-                //Arguments.of(new TypeToken<TreeSet<UUID>>() {}, TreeSet.class)
+                Arguments.of(new TypeToken<HashSet<UUID>>() {}, HashSet.class),
+                Arguments.of(new TypeToken<TreeSet<UUID>>() {}, TreeSet.class)
         );
     }
 

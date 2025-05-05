@@ -17,6 +17,7 @@
 package ch.movementsciences.instancio.vavr.internal.generator;
 
 import ch.movementsciences.instancio.vavr.generator.specs.MapSpecs;
+import ch.movementsciences.instancio.vavr.generator.specs.SetSpecs;
 import ch.movementsciences.instancio.vavr.internal.builder.MapBuilder;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
@@ -31,6 +32,8 @@ import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
 
+import java.util.Comparator;
+
 public class MapGenerator<K, V> implements Generator<MapBuilder<K, V>>, MapSpecs<K, V> {
 
     private GeneratorContext context;
@@ -38,6 +41,7 @@ public class MapGenerator<K, V> implements Generator<MapBuilder<K, V>>, MapSpecs
     private int maxSize = Constants.MAX_SIZE;
     private Class<?> subtype;
     private Map<K, V> withElements = HashMap.empty();
+    private Comparator<K> comparator;
 
     @Override
     public void init(final GeneratorContext context) {
@@ -46,7 +50,7 @@ public class MapGenerator<K, V> implements Generator<MapBuilder<K, V>>, MapSpecs
 
     @Override
     public MapBuilder<K, V> generate(final Random random) {
-        return MapBuilder.from(withElements);
+        return MapBuilder.from(withElements, comparator);
     }
 
     @SuppressWarnings("unchecked")
@@ -103,6 +107,13 @@ public class MapGenerator<K, V> implements Generator<MapBuilder<K, V>>, MapSpecs
     public final MapSpecs<K, V> with(Tuple2<K, V>... elements) {
         ApiValidator.notEmpty(elements, "'map().with(...)' must contain at least one element");
         withElements = withElements.merge(HashMap.ofEntries(elements));
+        return this;
+    }
+
+    @Override
+    public MapSpecs<K, V> comparator(Comparator<K> comparator) {
+        ApiValidator.notNull(comparator, "comparator must not be null");
+        this.comparator = comparator;
         return this;
     }
 }

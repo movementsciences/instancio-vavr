@@ -30,6 +30,8 @@ import org.instancio.internal.generator.InternalGeneratorHint;
 import org.instancio.internal.util.Constants;
 import org.instancio.internal.util.NumberUtils;
 
+import java.util.Comparator;
+
 public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
 
     private GeneratorContext context;
@@ -37,6 +39,7 @@ public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
     private int maxSize = Constants.MAX_SIZE;
     private Class<?> subtype;
     private Set<T> withElements = HashSet.empty();
+    private Comparator<T> comparator;
 
     @Override
     public void init(final GeneratorContext context) {
@@ -45,7 +48,7 @@ public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
 
     @Override
     public SetBuilder<T> generate(final Random random) {
-        return SetBuilder.from(withElements);
+        return SetBuilder.from(withElements, comparator);
     }
 
     @SuppressWarnings("unchecked")
@@ -100,6 +103,13 @@ public class SetGenerator<T> implements Generator<SetBuilder<T>>, SetSpecs<T> {
     public final SetSpecs<T> with(T... elements) {
         ApiValidator.notEmpty(elements, "'Set().with(...)' must contain at least one element");
         withElements = withElements.addAll(HashSet.of(elements));
+        return this;
+    }
+
+    @Override
+    public SetSpecs<T> comparator(Comparator<T> comparator) {
+        ApiValidator.notNull(comparator, "comparator must not be null");
+        this.comparator = comparator;
         return this;
     }
 }

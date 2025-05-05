@@ -20,6 +20,8 @@ import ch.movementsciences.instancio.vavr.internal.builder.SetBuilder;
 import org.instancio.generator.specs.SizeGeneratorSpec;
 import org.instancio.generator.specs.SubtypeGeneratorSpec;
 
+import java.util.Comparator;
+
 public interface SetSpecs<T> extends
         SizeGeneratorSpec<SetBuilder<T>>,
         SubtypeGeneratorSpec<SetBuilder<T>>
@@ -38,4 +40,6 @@ public interface SetSpecs<T> extends
 
     @SuppressWarnings("unchecked")
     SetSpecs<T> with(T ...elements);
+
+    SetSpecs<T> comparator(Comparator<T> comparator);
 }
